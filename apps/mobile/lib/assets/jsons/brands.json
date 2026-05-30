@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "ASUS",
+    "image": "https://images.seeklogo.com/logo-png/17/2/asus-republic-of-gamers-logo-png_seeklogo-175206.png"
+  },
+  {
+    "id": 2,
+    "name": "Apple",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+  },
+  {
+    "id": 3,
+    "name": "MSI",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Msi-Logo.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Lenovo",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/0/05/Lenovo_logo_2015.svg"
+  },
+  {
+    "id": 5,
+    "name": "Dell",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/4/48/Dell_Logo.svg"
+  },
+  {
+    "id": 6,
+    "name": "HP",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/a/ad/HP_logo_2012.svg"
+  },
+  {
+    "id": 7,
+    "name": "Acer",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/0/00/Acer_2011.svg"
+  },
+  {
+    "id": 8,
+    "name": "Razer",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Razer_logo.svg"
+  },
+  {
+    "id": 9,
+    "name": "Corsair",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/7/77/Corsair_logo.svg"
+  },
+  {
+    "id": 10,
+    "name": "Samsung",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg"
+  },
+  {
+    "id": 11,
+    "name": "Gigabyte",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/8/85/Gigabyte_Technology_logo_20080107.svg"
+  },
+  {
+    "id": 12,
+    "name": "Logitech",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/7/77/Logitech_logo.svg"
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "users": [
+    {
+      "id": "usr-001",
+      "email": "demo@pcshop.com",
+      "password": "demo123",
+      "name": "John Doe",
+      "avatar": "assets/images/avatars/default.jpg",
+      "addresses": [
+        {
+          "id": "addr-001",
+          "label": "Home",
+          "street": "123 Tech Street",
+          "city": "San Francisco",
+          "state": "CA",
+          "zip": "94105",
+          "isDefault": true
+        }
+      ],
+      "wishlist": ["gpu-001", "cpu-002"]
+    }
+  ]
+}
