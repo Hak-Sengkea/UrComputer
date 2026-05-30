@@ -1,25 +1,22 @@
-class Category {
+class Brand {
   final int id;
   final String name;
-  final String? banner;
+  final String? logo;
   final String? description;
-  final String? icon;
 
-  Category({
+  Brand({
     required this.id,
-    required this.banner,
     required this.name,
+    this.logo,
     this.description,
-    this.icon,
   });
 
-  factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(
+  factory Brand.fromJson(Map<String, dynamic> json) {
+    return Brand(
       id: json['id'],
       name: json['name'],
-      banner: json['banner'],
+      logo: json['logo'],
       description: json['description'],
-      icon: json['icon'],
     );
   }
 
@@ -27,9 +24,8 @@ class Category {
     return {
       'id': id,
       'name': name,
-      'banner': banner,
+      'logo': logo,
       'description': description,
-      'icon': icon,
     };
   }
 }
