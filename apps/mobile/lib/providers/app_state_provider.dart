@@ -1,94 +1,60 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
 import '../../models/user.dart';
 
-class AppState {
-  final User? currentUser;
-  final bool isLoading;
-  final String? errorMessage;
-  final List<int> cartItems;
+class AppStateProvider extends ChangeNotifier {
+  User? _currentUser;
+  bool _isLoading = false;
+  String? _errorMessage;
+  List<int> _cartItems = [];
 
-  AppState({
-    this.currentUser,
-    this.isLoading = false,
-    this.errorMessage,
-    this.cartItems = const [],
-  });
-
-  AppState copyWith({
-    User? currentUser,
-    bool? isLoading,
-    String? errorMessage,
-    List<int>? cartItems,
-  }) {
-    return AppState(
-      currentUser: currentUser ?? this.currentUser,
-      isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage ?? this.errorMessage,
-      cartItems: cartItems ?? this.cartItems,
-    );
-  }
-}
-
-class AppStateNotifier extends StateNotifier<AppState> {
-  AppStateNotifier() : super(AppState());
+  User? get currentUser => _currentUser;
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
+  List<int> get cartItems => _cartItems;
+  int get cartCount => _cartItems.length;
 
   void setCurrentUser(User user) {
-    state = state.copyWith(currentUser: user);
+    _currentUser = user;
+    notifyListeners();
   }
 
   void clearCurrentUser() {
-    state = state.copyWith(currentUser: null);
+    _currentUser = null;
+    notifyListeners();
   }
 
   void setLoading(bool isLoading) {
-    state = state.copyWith(isLoading: isLoading);
+    _isLoading = isLoading;
+    notifyListeners();
   }
 
   void setError(String? error) {
-    state = state.copyWith(errorMessage: error);
+    _errorMessage = error;
+    notifyListeners();
   }
 
   void clearError() {
-    state = state.copyWith(errorMessage: null);
+    _errorMessage = null;
+    notifyListeners();
   }
 
   void addToCart(int productId) {
-    final updatedCart = [...state.cartItems, productId];
-    state = state.copyWith(cartItems: updatedCart);
+    if (!_cartItems.contains(productId)) {
+      _cartItems.add(productId);
+      notifyListeners();
+    }
   }
 
   void removeFromCart(int productId) {
-    final updatedCart = state.cartItems.where((id) => id != productId).toList();
-    state = state.copyWith(cartItems: updatedCart);
+    _cartItems.removeWhere((id) => id == productId);
+    notifyListeners();
   }
 
   void clearCart() {
-    state = state.copyWith(cartItems: []);
+    _cartItems.clear();
+    notifyListeners();
   }
 
-  int get cartCount => state.cartItems.length;
+  bool isInCart(int productId) => _cartItems.contains(productId);
 }
 
-final appStateProvider = StateNotifierProvider<AppStateNotifier, AppState>((ref) {
-  return AppStateNotifier();
-});
-
-final currentUserProvider = Provider<User?>((ref) {
-  return ref.watch(appStateProvider).currentUser;
-});
-
-final isLoadingProvider = Provider<bool>((ref) {
-  return ref.watch(appStateProvider).isLoading;
-});
-
-final errorMessageProvider = Provider<String?>((ref) {
-  return ref.watch(appStateProvider).errorMessage;
-});
-
-final cartItemsProvider = Provider<List<int>>((ref) {
-  return ref.watch(appStateProvider).cartItems;
-});
-
-final cartCountProvider = Provider<int>((ref) {
-  return ref.watch(appStateProvider).cartItems.length;
-});

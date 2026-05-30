@@ -1,25 +1,59 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/user.dart';
 import '../../data/repository/user_repository.dart';
 
-final userRepositoryProvider = Provider((ref) => UserRepository());
+class UserProvider extends ChangeNotifier {
+  final UserRepository _repository = UserRepository();
+  
+  List<User> _users = [];
+  List<User> _filteredUsers = [];
+  bool _isLoading = false;
+  String? _errorMessage;
 
-final allUsersProvider = FutureProvider<List<User>>((ref) async {
-  final repository = ref.watch(userRepositoryProvider);
-  return repository.getAllUsers();
-});
+  List<User> get users => _users;
+  List<User> get filteredUsers => _filteredUsers;
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
 
-final userById = FutureProvider.family<User?, int>((ref, id) async {
-  final repository = ref.watch(userRepositoryProvider);
-  return repository.getUserById(id);
-});
+  Future<void> loadAllUsers() async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      _users = await _repository.getAllUsers();
+      _filteredUsers = _users;
+      _errorMessage = null;
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
 
-final userByEmail = FutureProvider.family<User?, String>((ref, email) async {
-  final repository = ref.watch(userRepositoryProvider);
-  return repository.getUserByEmail(email);
-});
+  Future<User?> getUserById(int id) async {
+    return await _repository.getUserById(id);
+  }
 
-final searchUsers = FutureProvider.family<List<User>, String>((ref, query) async {
-  final repository = ref.watch(userRepositoryProvider);
-  return repository.searchUsers(query);
-});
+  Future<User?> getUserByEmail(String email) async {
+    return await _repository.getUserByEmail(email);
+  }
+
+  Future<void> searchUsers(String query) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      _filteredUsers = await _repository.searchUsers(query);
+      _errorMessage = null;
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void clearError() {
+    _errorMessage = null;
+    notifyListeners();
+  }
+}
+
