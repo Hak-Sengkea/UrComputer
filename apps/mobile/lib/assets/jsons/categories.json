@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "Gaming Laptops",
+    "icon": "laptop.png",
+    "banner": "/category_img/gaming_laptop_banner.jpg",
+    "description": "High-performance gaming and professional laptops."
+  },
+  {
+    "id": 2,
+    "name": "PC Components",
+    "icon": "cpu.png",
+    "banner": "/category_img/component_banner.jpg",
+    "description": "CPUs, GPUs, RAM, SSDs, motherboards, and power supplies."
+  },
+  {
+    "id": 3,
+    "name": "Peripherals",
+    "icon": "keyboard.png",
+    "banner": "/category_img/peripherals_banner.jpg",
+    "description": "Mechanical keyboards, gaming mice, headsets, and monitors."
+  },
+  {
+    "id": 4,
+    "name": "PC Accessories",
+    "icon": "accessory.png",
+    "banner": "/category_img/accessories_banner.jpg",
+    "description": "Cooling pads, adapters, RGB lights, cables, and laptop stands."
+  },
+  {
+    "id": 5,
+    "name": "Storage Devices",
+    "icon": "ssd.png",
+    "banner": "/category_img/storage_banner.jpg",
+    "description": "NVMe SSDs, SATA SSDs, HDDs, and external storage devices."
+  },
+  {
+    "id": 6,
+    "name": "Networking",
+    "icon": "router.png",
+    "banner": "/category_img/network_banner.jpg",
+    "description": "Routers, Wi-Fi adapters, switches, and networking accessories."
+  }
+]
