@@ -3,6 +3,14 @@ import 'app_text_style.dart';
 
 class AppTheme {
   static const Color primary = Color(0xFF00D1FF);
+  
+  // ✅ Define the actual colors (not null)
+  static const Color neonCyan = Color(0xFF00E5FF);
+  static const Color neonPurple = Color(0xFFB44CFF);
+  static const Color neonPink = Color(0xFFFF4D8C);
+  static const Color darkBg = Color(0xFF0A0A0A);
+  static const Color cardBg = Color(0xFF1A1A1A);
+  static const Color textSecondary = Color(0xFF888888);
 
   static ThemeData get lightTheme {
     return ThemeData(
@@ -11,7 +19,7 @@ class AppTheme {
         seedColor: primary,
         brightness: Brightness.light,
       ),
-      textTheme: TextTheme(
+      textTheme: const TextTheme(
         displayLarge: AppTextStyle.displayLarge,
         displayMedium: AppTextStyle.displayMedium,
         displaySmall: AppTextStyle.displaySmall,
@@ -34,11 +42,14 @@ class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primary,
-        brightness: Brightness.dark,
+      brightness: Brightness.dark,
+      primaryColor: neonCyan,
+      scaffoldBackgroundColor: Colors.black,
+      colorScheme: const ColorScheme.dark(
+        primary: neonCyan,
+        secondary: neonPurple,
       ),
-      textTheme: TextTheme(
+      textTheme: const TextTheme(
         displayLarge: AppTextStyle.displayLarge,
         displayMedium: AppTextStyle.displayMedium,
         displaySmall: AppTextStyle.displaySmall,
@@ -57,4 +68,19 @@ class AppTheme {
       ),
     );
   }
+}
+
+// ✅ Add this class for gradients
+class AppGradients {
+  static const LinearGradient primaryButton = LinearGradient(
+    colors: [AppTheme.neonCyan, AppTheme.neonPurple],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  
+  static const LinearGradient background = LinearGradient(
+    colors: [Colors.black, Color(0xFF0D0D0D)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
 }
