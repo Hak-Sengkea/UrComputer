@@ -1,20 +1,55 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/category.dart';
 import '../../data/repository/category_repository.dart';
 
-final categoryRepositoryProvider = Provider((ref) => CategoryRepository());
+class CategoryProvider extends ChangeNotifier {
+  final CategoryRepository _repository = CategoryRepository();
+  
+  List<Category> _categories = [];
+  List<Category> _filteredCategories = [];
+  bool _isLoading = false;
+  String? _errorMessage;
 
-final allCategoriesProvider = FutureProvider<List<Category>>((ref) async {
-  final repository = ref.watch(categoryRepositoryProvider);
-  return repository.getAllCategories();
-});
+  List<Category> get categories => _categories;
+  List<Category> get filteredCategories => _filteredCategories;
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
 
-final categoryById = FutureProvider.family<Category?, int>((ref, id) async {
-  final repository = ref.watch(categoryRepositoryProvider);
-  return repository.getCategoryById(id);
-});
+  Future<void> loadAllCategories() async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      _categories = await _repository.getAllCategories();
+      _filteredCategories = _categories;
+      _errorMessage = null;
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
 
-final searchCategories = FutureProvider.family<List<Category>, String>((ref, query) async {
-  final repository = ref.watch(categoryRepositoryProvider);
-  return repository.searchCategories(query);
-});
+  Future<Category?> getCategoryById(int id) async {
+    return await _repository.getCategoryById(id);
+  }
+
+  Future<void> searchCategories(String query) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      _filteredCategories = await _repository.searchCategories(query);
+      _errorMessage = null;
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void clearError() {
+    _errorMessage = null;
+    notifyListeners();
+  }
+}
+

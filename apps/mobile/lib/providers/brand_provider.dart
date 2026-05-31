@@ -1,20 +1,55 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/brand.dart';
 import '../../data/repository/brand_repository.dart';
 
-final brandRepositoryProvider = Provider((ref) => BrandRepository());
+class BrandProvider extends ChangeNotifier {
+  final BrandRepository _repository = BrandRepository();
+  
+  List<Brand> _brands = [];
+  List<Brand> _filteredBrands = [];
+  bool _isLoading = false;
+  String? _errorMessage;
 
-final allBrandsProvider = FutureProvider<List<Brand>>((ref) async {
-  final repository = ref.watch(brandRepositoryProvider);
-  return repository.getAllBrands();
-});
+  List<Brand> get brands => _brands;
+  List<Brand> get filteredBrands => _filteredBrands;
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
 
-final brandById = FutureProvider.family<Brand?, int>((ref, id) async {
-  final repository = ref.watch(brandRepositoryProvider);
-  return repository.getBrandById(id);
-});
+  Future<void> loadAllBrands() async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      _brands = await _repository.getAllBrands();
+      _filteredBrands = _brands;
+      _errorMessage = null;
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
 
-final searchBrands = FutureProvider.family<List<Brand>, String>((ref, query) async {
-  final repository = ref.watch(brandRepositoryProvider);
-  return repository.searchBrands(query);
-});
+  Future<Brand?> getBrandById(int id) async {
+    return await _repository.getBrandById(id);
+  }
+
+  Future<void> searchBrands(String query) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      _filteredBrands = await _repository.searchBrands(query);
+      _errorMessage = null;
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void clearError() {
+    _errorMessage = null;
+    notifyListeners();
+  }
+}
+
