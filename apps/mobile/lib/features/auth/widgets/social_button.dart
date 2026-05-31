@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../theme/app_theme.dart';
 import '../../../theme/app_text_style.dart';
 
 class SocialButton extends StatelessWidget {
@@ -24,7 +23,7 @@ class SocialButton extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             width: 1,
           ),
         ),

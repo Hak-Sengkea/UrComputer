@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'app_colors.dart';
 import 'app_text_style.dart';
 
 class AppTheme {
@@ -43,11 +44,33 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      primaryColor: neonCyan,
-      scaffoldBackgroundColor: Colors.black,
+      primaryColor: AppColors.primary,
+      scaffoldBackgroundColor: AppColors.surface,
       colorScheme: const ColorScheme.dark(
-        primary: neonCyan,
-        secondary: neonPurple,
+        primary: AppColors.primary,
+        onPrimary: AppColors.onPrimary,
+        secondary: AppColors.secondary,
+        surface: AppColors.surface,
+        onSurface: AppColors.onSurface,
+        surfaceContainerHighest: AppColors.surfaceVariant,
+        outline: AppColors.outline,
+        error: AppColors.error,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.surface,
+        foregroundColor: AppColors.onSurface,
+        elevation: 0,
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: AppColors.surface,
+        indicatorColor: AppColors.primary.withValues(alpha: 0.16),
+        labelTextStyle: WidgetStateProperty.all(AppTextStyle.labelSmall),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          foregroundColor: AppColors.onPrimary,
+        ),
       ),
       textTheme: const TextTheme(
         displayLarge: AppTextStyle.displayLarge,
@@ -73,13 +96,13 @@ class AppTheme {
 // ✅ Add this class for gradients
 class AppGradients {
   static const LinearGradient primaryButton = LinearGradient(
-    colors: [AppTheme.neonCyan, AppTheme.neonPurple],
+    colors: [AppColors.primary, AppTheme.neonPurple],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
   
   static const LinearGradient background = LinearGradient(
-    colors: [Colors.black, Color(0xFF0D0D0D)],
+    colors: [AppColors.surface, Color(0xFF10151C), AppColors.surfaceVariant],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );

@@ -77,10 +77,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (success && mounted) {
       _showSnackBar('Registration successful!', isError: false);
       
-      // Navigate to login after successful registration
+      // Navigate to the app after successful registration.
       Future.delayed(const Duration(seconds: 1), () {
         if (mounted) {
-          context.go('/login');
+          context.go('/home');
         }
       });
     } else if (mounted) {
@@ -112,7 +112,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () {
-                  context.go('/login');
+                  context.go('/');
                 },
               ),
             ),
