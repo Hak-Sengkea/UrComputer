@@ -13,30 +13,36 @@ class JsonDataProvider {
 
   Future<Map<String, dynamic>> loadProducts() async {
     if (_productsCache != null) return _productsCache!;
-    final jsonString = await rootBundle.loadString('assets/json/products.json');
-    
+    final jsonString = await rootBundle.loadString(
+      'assets/jsons/products.json',
+    );
+
     _productsCache = json.decode(jsonString);
-    print("Loaded successfully: ${_productsCache!['products'].length} products");
+    print(
+      "Loaded successfully: ${_productsCache!['products'].length} products",
+    );
     return _productsCache!;
   }
 
   Future<Map<String, dynamic>> loadCategories() async {
     if (_categoriesCache != null) return _categoriesCache!;
-    final jsonString = await rootBundle.loadString('assets/json/categories.json');
+    final jsonString = await rootBundle.loadString(
+      'assets/jsons/categories.json',
+    );
     _categoriesCache = json.decode(jsonString);
     return _categoriesCache!;
   }
 
   Future<Map<String, dynamic>> loadUsers() async {
     if (_usersCache != null) return _usersCache!;
-    final jsonString = await rootBundle.loadString('assets/json/users.json');
+    final jsonString = await rootBundle.loadString('assets/jsons/user.json');
     _usersCache = json.decode(jsonString);
     return _usersCache!;
   }
 
   Future<Map<String, dynamic>> loadBrands() async {
     if (_brandsCache != null) return _brandsCache!;
-    final jsonString = await rootBundle.loadString('assets/json/brands.json');
+    final jsonString = await rootBundle.loadString('assets/jsons/brands.json');
     _brandsCache = json.decode(jsonString);
     return _brandsCache!;
   }
