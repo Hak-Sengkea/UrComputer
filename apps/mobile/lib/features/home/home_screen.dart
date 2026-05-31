@@ -7,10 +7,23 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('UrComputer'),
+        title: Text(
+          'UrComputer',
+          style: TextStyle(
+            fontFamily: 'SpaceMono',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Center(
-        child: Text('Home Screen'),
+        child: Text(
+          'Home Screen',
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }

@@ -9,6 +9,7 @@ class JsonDataProvider {
   Map<String, dynamic>? _productsCache;
   Map<String, dynamic>? _categoriesCache;
   Map<String, dynamic>? _usersCache;
+  Map<String, dynamic>? _brandsCache;
 
   Future<Map<String, dynamic>> loadProducts() async {
     if (_productsCache != null) return _productsCache!;
@@ -32,12 +33,19 @@ class JsonDataProvider {
     _usersCache = json.decode(jsonString);
     return _usersCache!;
   }
-  
+
+  Future<Map<String, dynamic>> loadBrands() async {
+    if (_brandsCache != null) return _brandsCache!;
+    final jsonString = await rootBundle.loadString('assets/json/brands.json');
+    _brandsCache = json.decode(jsonString);
+    return _brandsCache!;
+  }
 
   // Clear cache when you want to reload (useful for "pull to refresh" simulation)
   void clearCache() {
     _productsCache = null;
     _categoriesCache = null;
     _usersCache = null;
+    _brandsCache = null;
   }
 }
