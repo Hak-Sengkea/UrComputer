@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'widgets/gradient_background.dart';
 import 'widgets/neon_button.dart';
 import 'widgets/social_button.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_style.dart';
+import '../../providers/auth_provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -17,49 +19,72 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _acceptedTerms = false;
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
   Future<void> _handleRegister() async {
-    if (_emailController.text.isEmpty) {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+    
+    // Email validation
+    if (email.isEmpty) {
       _showSnackBar('Please enter your email');
       return;
     }
     
-    if (_passwordController.text.isEmpty) {
+    if (!email.contains('@') || !email.contains('.')) {
+      _showSnackBar('Please enter a valid email address');
+      return;
+    }
+    
+    // Password validation
+    if (password.isEmpty) {
       _showSnackBar('Please enter a password');
       return;
     }
     
-    if (_passwordController.text != _confirmPasswordController.text) {
+    if (password.length < 6) {
+      _showSnackBar('Password must be at least 6 characters');
+      return;
+    }
+    
+    // Confirm password validation
+    if (password != confirmPassword) {
       _showSnackBar('Passwords do not match');
       return;
     }
     
+    // Terms validation
     if (!_acceptedTerms) {
       _showSnackBar('Please accept the Terms and Conditions');
       return;
     }
     
-    setState(() => _isLoading = true);
+    // Attempt registration
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final success = await authProvider.register(email, password, confirmPassword);
     
-    // Simulate API call
-    await Future.delayed(const Duration(seconds: 2));
-    
-    setState(() => _isLoading = false);
-    
-    if (mounted) {
-      // Show success message
+    if (success && mounted) {
       _showSnackBar('Registration successful!', isError: false);
       
-      // Go back to login screen after a delay
+      // Navigate to login after successful registration
       Future.delayed(const Duration(seconds: 1), () {
         if (mounted) {
-          context.go('/login'); // Navigate back to login
+          context.go('/login');
         }
       });
+    } else if (mounted) {
+      _showSnackBar(authProvider.errorMessage ?? 'Registration failed. Please try again.');
     }
   }
 
@@ -69,44 +94,48 @@ class _RegisterScreenState extends State<RegisterScreen> {
         content: Text(message, style: AppTextStyle.bodyMedium),
         backgroundColor: isError ? Colors.red : Colors.green,
         behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return GradientBackground(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              // Go back to login using go_router
-              context.go('/login');
-            },
-          ),
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(),
-                const SizedBox(height: 40),
-                _buildRegisterForm(),
-                const SizedBox(height: 30),
-                _buildSocialSection(),
-                const SizedBox(height: 20),
-                _buildLoginLink(),
-              ],
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, child) {
+        return GradientBackground(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () {
+                  context.go('/login');
+                },
+              ),
+            ),
+            body: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeader(),
+                    const SizedBox(height: 40),
+                    _buildRegisterForm(authProvider),
+                    const SizedBox(height: 30),
+                    _buildSocialSection(),
+                    const SizedBox(height: 20),
+                    _buildLoginLink(),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -115,7 +144,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ShaderMask(
-          shaderCallback: (bounds) => LinearGradient(
+          shaderCallback: (bounds) => const LinearGradient(
             colors: [AppTheme.neonCyan, AppTheme.neonPurple],
           ).createShader(bounds),
           child: Text(
@@ -145,7 +174,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildRegisterForm() {
+  Widget _buildRegisterForm(AuthProvider authProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -160,7 +189,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _buildTextField(
           controller: _passwordController,
           label: 'PASSWORD',
-          hint: 'Enter your password',
+          hint: 'Enter your password (min. 6 characters)',
           icon: Icons.lock_outline,
           obscureText: _obscurePassword,
           suffixIcon: IconButton(
@@ -194,8 +223,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
         NeonButton(
           text: 'REGISTER',
           onPressed: _handleRegister,
-          isLoading: _isLoading,
+          isLoading: authProvider.isLoading,
         ),
+        if (authProvider.errorMessage != null) ...[
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              // ignore: deprecated_member_use
+              color: Colors.red.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+              // ignore: deprecated_member_use
+              border: Border.all(color: Colors.red.withOpacity(0.3)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.error_outline, color: Colors.red, size: 18),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    authProvider.errorMessage!,
+                    style: AppTextStyle.bodySmall.copyWith(color: Colors.red),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -234,12 +288,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
             controller: controller,
             obscureText: obscureText,
             keyboardType: keyboardType,
-            style: AppTextStyle.bodyLarge,
+            style: const TextStyle(
+              color: Colors.white,  
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: AppTextStyle.bodyMedium.copyWith(
-                // ignore: deprecated_member_use
-                color: AppTheme.textSecondary?.withOpacity(0.5),
+              hintStyle: TextStyle(
+                color: Colors.grey[500], 
+                fontSize: 14,
               ),
               prefixIcon: Icon(icon, color: AppTheme.textSecondary, size: 20),
               suffixIcon: suffixIcon,
@@ -270,7 +328,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               }
               return Colors.transparent;
             }),
-            side: BorderSide(color: AppTheme.textSecondary ?? Colors.transparent),
+            side: const BorderSide(color: AppTheme.textSecondary),
           ),
         ),
         const SizedBox(width: 12),
@@ -349,7 +407,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         TextButton(
           onPressed: () {
-            // Go back to login using go_router
             context.go('/login');
           },
           style: TextButton.styleFrom(padding: EdgeInsets.zero),

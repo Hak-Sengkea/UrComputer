@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'widgets/gradient_background.dart';
 import 'widgets/neon_button.dart';
 import 'widgets/social_button.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_style.dart';
+import '../../providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,24 +18,56 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLoading = false;
   bool _obscurePassword = true;
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  // Optional: Pre-fill for testing (remove in production)
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Future<void> _handleLogin() async {
-    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      _showSnackBar('Please fill in all fields');
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    
+    // Validation
+    if (email.isEmpty) {
+      _showSnackBar('Please enter your email');
       return;
     }
     
-    setState(() => _isLoading = true);
+    if (!email.contains('@') || !email.contains('.')) {
+      _showSnackBar('Please enter a valid email address');
+      return;
+    }
     
-    // Simulate API call
-    await Future.delayed(const Duration(seconds: 2));
+    if (password.isEmpty) {
+      _showSnackBar('Please enter your password');
+      return;
+    }
     
-    setState(() => _isLoading = false);
+    if (password.length < 6) {
+      _showSnackBar('Password must be at least 6 characters');
+      return;
+    }
     
-    if (mounted) {
-      context.go('/');  
+    // Get auth provider and attempt login
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final success = await authProvider.login(email, password);
+    
+    if (success && mounted) {
+      // Navigate to home on success
+      context.go('/');
+    } else if (mounted) {
+      // Show error message
+      _showSnackBar(authProvider.errorMessage ?? 'Login failed. Please try again.');
     }
   }
 
@@ -43,36 +77,41 @@ class _LoginScreenState extends State<LoginScreen> {
         content: Text(message, style: AppTextStyle.bodyMedium),
         backgroundColor: isError ? Colors.red : Colors.green,
         behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return GradientBackground(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 40),
-                _buildHeader(),
-                const SizedBox(height: 60),
-                _buildLoginForm(),
-                const SizedBox(height: 30),
-                _buildSocialSection(),
-                const SizedBox(height: 20),
-                _buildFooter(),
-                const SizedBox(height: 20),
-                _buildBottomNav(),
-              ],
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, child) {
+        return GradientBackground(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 40),
+                    _buildHeader(),
+                    const SizedBox(height: 60),
+                    _buildLoginForm(authProvider),
+                    const SizedBox(height: 30),
+                    _buildSocialSection(),
+                    const SizedBox(height: 20),
+                    _buildFooter(),
+                    const SizedBox(height: 20),
+                    _buildBottomNav(),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -81,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ShaderMask(
-          shaderCallback: (bounds) => LinearGradient(
+          shaderCallback: (bounds) => const LinearGradient(
             colors: [AppTheme.neonCyan, AppTheme.neonPurple],
           ).createShader(bounds),
           child: Text(
@@ -104,14 +143,14 @@ class _LoginScreenState extends State<LoginScreen> {
           'Please login to continue',
           style: AppTextStyle.bodyMedium.copyWith(
             // ignore: deprecated_member_use
-            color: AppTheme.textSecondary?.withOpacity(0.7),
+            color: AppTheme.textSecondary.withOpacity(0.7),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildLoginForm() {
+  Widget _buildLoginForm(AuthProvider authProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -134,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _buildTextField(
           controller: _passwordController,
           label: 'PASSWORD',
-          hint: '**********',
+          hint: 'Enter your password',
           icon: Icons.lock_outline,
           obscureText: _obscurePassword,
           suffixIcon: IconButton(
@@ -150,8 +189,33 @@ class _LoginScreenState extends State<LoginScreen> {
         NeonButton(
           text: 'LOGIN',
           onPressed: _handleLogin,
-          isLoading: _isLoading,
+          isLoading: authProvider.isLoading,
         ),
+        if (authProvider.errorMessage != null) ...[
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              // ignore: deprecated_member_use
+              color: Colors.red.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+              // ignore: deprecated_member_use
+              border: Border.all(color: Colors.red.withOpacity(0.3)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.error_outline, color: Colors.red, size: 18),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    authProvider.errorMessage!,
+                    style: AppTextStyle.bodySmall.copyWith(color: Colors.red),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -190,12 +254,16 @@ class _LoginScreenState extends State<LoginScreen> {
             controller: controller,
             obscureText: obscureText,
             keyboardType: keyboardType,
-            style: AppTextStyle.bodyLarge,
+            style: const TextStyle(
+              color: Colors.white, 
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: AppTextStyle.bodyMedium.copyWith(
-                // ignore: deprecated_member_use
-                color: AppTheme.textSecondary?.withOpacity(0.5),
+              hintStyle: TextStyle(
+                color: Colors.grey[500],  
+                fontSize: 14,
               ),
               prefixIcon: Icon(icon, color: AppTheme.textSecondary, size: 20),
               suffixIcon: suffixIcon,
@@ -221,13 +289,14 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                'OR VIA BY',
+                'OR SYNC VIA',
                 style: AppTextStyle.labelSmall.copyWith(
                   color: AppTheme.textSecondary,
                   letterSpacing: 1.5,
                 ),
               ),
             ),
+            // ignore: deprecated_member_use
             Expanded(child: Divider(color: Colors.white.withOpacity(0.1))),
           ],
         ),
@@ -261,7 +330,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         TextButton(
           onPressed: () {
-            // Navigate to register using go_router
             context.push('/register');
           },
           style: TextButton.styleFrom(padding: EdgeInsets.zero),
@@ -285,7 +353,7 @@ class _LoginScreenState extends State<LoginScreen> {
           width: 4,
           height: 4,
           margin: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: AppTheme.textSecondary,
             shape: BoxShape.circle,
           ),
@@ -295,7 +363,7 @@ class _LoginScreenState extends State<LoginScreen> {
           width: 4,
           height: 4,
           margin: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: AppTheme.textSecondary,
             shape: BoxShape.circle,
           ),
@@ -318,7 +386,7 @@ class _LoginScreenState extends State<LoginScreen> {
         text,
         style: AppTextStyle.labelSmall.copyWith(
           // ignore: deprecated_member_use
-          color: AppTheme.textSecondary?.withOpacity(0.7),
+          color: AppTheme.textSecondary.withOpacity(0.7),
         ),
       ),
     );
