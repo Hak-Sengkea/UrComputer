@@ -14,10 +14,8 @@ class AuthProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get isLoggedIn => _currentUser != null;
   
-  // Get user's full name
   String get userFullName => _currentUser?.fullName ?? '';
   
-  // Get user's email
   String get userEmail => _currentUser?.email ?? '';
   
   AuthProvider() {
