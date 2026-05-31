@@ -5,7 +5,7 @@ class AppStateProvider extends ChangeNotifier {
   User? _currentUser;
   bool _isLoading = false;
   String? _errorMessage;
-  List<int> _cartItems = [];
+  final List<int> _cartItems = [];
 
   User? get currentUser => _currentUser;
   bool get isLoading => _isLoading;
@@ -57,4 +57,3 @@ class AppStateProvider extends ChangeNotifier {
 
   bool isInCart(int productId) => _cartItems.contains(productId);
 }
-

@@ -4,12 +4,7 @@ class Brand {
   final String? logo;
   final String? description;
 
-  Brand({
-    required this.id,
-    required this.name,
-    this.logo,
-    this.description,
-  });
+  Brand({required this.id, required this.name, this.logo, this.description});
 
   factory Brand.fromJson(Map<String, dynamic> json) {
     return Brand(
@@ -21,11 +16,6 @@ class Brand {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'logo': logo,
-      'description': description,
-    };
+    return {'id': id, 'name': name, 'logo': logo, 'description': description};
   }
 }

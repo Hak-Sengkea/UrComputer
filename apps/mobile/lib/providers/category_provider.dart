@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../models/category.dart';
 import '../../data/repository/category_repository.dart';
 
@@ -52,4 +51,3 @@ class CategoryProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-

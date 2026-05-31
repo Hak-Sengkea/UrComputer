@@ -29,7 +29,10 @@ class JsonDataProvider {
     final jsonString = await rootBundle.loadString(
       'assets/jsons/categories.json',
     );
-    _categoriesCache = json.decode(jsonString);
+    final decodedJson = json.decode(jsonString);
+    _categoriesCache = decodedJson is List
+        ? {'categories': decodedJson}
+        : decodedJson as Map<String, dynamic>;
     return _categoriesCache!;
   }
 

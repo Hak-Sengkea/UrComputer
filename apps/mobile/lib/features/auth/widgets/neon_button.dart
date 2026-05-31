@@ -17,14 +17,10 @@ class NeonButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Fix: Use Theme.of(context) as fallback
-    final neonCyan = AppTheme.neonCyan ?? Colors.cyan;
-    final neonPurple = AppTheme.neonPurple ?? Colors.purple;
-    
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [neonCyan, neonPurple],
+        gradient: const LinearGradient(
+          colors: [AppTheme.neonCyan, AppTheme.neonPurple],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -32,7 +28,7 @@ class NeonButton extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             // ignore: deprecated_member_use
-            color: neonCyan.withOpacity(0.3), // Now this won't be null
+            color: AppTheme.neonCyan.withOpacity(0.3),
             blurRadius: 15,
             spreadRadius: 0,
           ),

@@ -4,41 +4,48 @@
     "name": "Gaming Laptops",
     "icon": "laptop.png",
     "banner": "/category_img/gaming_laptop_banner.jpg",
-    "description": "High-performance gaming and professional laptops."
+    "description": "Portable high-performance laptops built for gaming and productivity."
   },
   {
     "id": 2,
-    "name": "PC Components",
+    "name": "PC Builds",
     "icon": "cpu.png",
     "banner": "/category_img/component_banner.jpg",
-    "description": "CPUs, GPUs, RAM, SSDs, motherboards, and power supplies."
+    "description": "Custom-built desktop PCs tuned for gaming, work, and upgrades."
   },
   {
     "id": 3,
-    "name": "Peripherals",
-    "icon": "keyboard.png",
-    "banner": "/category_img/peripherals_banner.jpg",
-    "description": "Mechanical keyboards, gaming mice, headsets, and monitors."
+    "name": "PC Components",
+    "icon": "router.png",
+    "banner": "/category_img/network_banner.jpg",
+    "description": "CPUs, GPUs, RAM, storage, motherboards, PSUs, and cooling parts."
   },
   {
     "id": 4,
-    "name": "PC Accessories",
-    "icon": "accessory.png",
-    "banner": "/category_img/accessories_banner.jpg",
-    "description": "Cooling pads, adapters, RGB lights, cables, and laptop stands."
+    "name": "Peripherals",
+    "icon": "keyboard.png",
+    "banner": "/category_img/peripherals_banner.jpg",
+    "description": "Keyboards, mice, headsets, monitors, and other desk essentials."
   },
   {
     "id": 5,
-    "name": "Storage Devices",
-    "icon": "ssd.png",
-    "banner": "/category_img/storage_banner.jpg",
-    "description": "NVMe SSDs, SATA SSDs, HDDs, and external storage devices."
+    "name": "PC Accessories",
+    "icon": "accessory.png",
+    "banner": "/category_img/accessories_banner.jpg",
+    "description": "Stands, adapters, RGB gear, cables, and cooling add-ons."
   },
   {
     "id": 6,
+    "name": "Storage Devices",
+    "icon": "ssd.png",
+    "banner": "/category_img/storage_banner.jpg",
+    "description": "Fast SSDs, HDDs, and external drives for extra capacity."
+  },
+  {
+    "id": 7,
     "name": "Networking",
     "icon": "router.png",
     "banner": "/category_img/network_banner.jpg",
-    "description": "Routers, Wi-Fi adapters, switches, and networking accessories."
+    "description": "Routers, Wi-Fi adapters, switches, and network expansion gear."
   }
 ]

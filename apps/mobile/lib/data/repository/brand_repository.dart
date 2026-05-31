@@ -23,8 +23,11 @@ class BrandRepository {
     final brands = await getAllBrands();
     final lowerQuery = query.toLowerCase();
     return brands
-        .where((b) => b.name.toLowerCase().contains(lowerQuery) ||
-            (b.description?.toLowerCase().contains(lowerQuery) ?? false))
+        .where(
+          (b) =>
+              b.name.toLowerCase().contains(lowerQuery) ||
+              (b.description?.toLowerCase().contains(lowerQuery) ?? false),
+        )
         .toList();
   }
 }

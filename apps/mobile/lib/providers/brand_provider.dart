@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../models/brand.dart';
 import '../../data/repository/brand_repository.dart';
 
@@ -52,4 +51,3 @@ class BrandProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-
