@@ -27,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  // Optional: Pre-fill for testing (remove in production)
   @override
   void initState() {
     super.initState();
@@ -37,7 +36,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     
-    // Validation
     if (email.isEmpty) {
       _showSnackBar('Please enter your email');
       return;
@@ -58,15 +56,12 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
     
-    // Get auth provider and attempt login
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final success = await authProvider.login(email, password);
     
     if (success && mounted) {
-      // Navigate to home on success
       context.go('/');
     } else if (mounted) {
-      // Show error message
       _showSnackBar(authProvider.errorMessage ?? 'Login failed. Please try again.');
     }
   }
@@ -142,7 +137,6 @@ class _LoginScreenState extends State<LoginScreen> {
         Text(
           'Please login to continue',
           style: AppTextStyle.bodyMedium.copyWith(
-            // ignore: deprecated_member_use
             color: AppTheme.textSecondary.withOpacity(0.7),
           ),
         ),
@@ -296,7 +290,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            // ignore: deprecated_member_use
             Expanded(child: Divider(color: Colors.white.withOpacity(0.1))),
           ],
         ),
@@ -385,7 +378,6 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Text(
         text,
         style: AppTextStyle.labelSmall.copyWith(
-          // ignore: deprecated_member_use
           color: AppTheme.textSecondary.withOpacity(0.7),
         ),
       ),

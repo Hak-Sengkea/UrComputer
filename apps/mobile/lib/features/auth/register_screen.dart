@@ -36,7 +36,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
     
-    // Email validation
     if (email.isEmpty) {
       _showSnackBar('Please enter your email');
       return;
@@ -47,7 +46,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
     
-    // Password validation
     if (password.isEmpty) {
       _showSnackBar('Please enter a password');
       return;
@@ -58,26 +56,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
     
-    // Confirm password validation
     if (password != confirmPassword) {
       _showSnackBar('Passwords do not match');
       return;
     }
     
-    // Terms validation
     if (!_acceptedTerms) {
       _showSnackBar('Please accept the Terms and Conditions');
       return;
     }
     
-    // Attempt registration
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final success = await authProvider.register(email, password, confirmPassword);
     
     if (success && mounted) {
       _showSnackBar('Registration successful!', isError: false);
       
-      // Navigate to login after successful registration
       Future.delayed(const Duration(seconds: 1), () {
         if (mounted) {
           context.go('/login');
@@ -361,7 +355,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       children: [
         Row(
           children: [
-            // ignore: deprecated_member_use
             Expanded(child: Divider(color: Colors.white.withOpacity(0.1))),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -373,7 +366,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
             ),
-            // ignore: deprecated_member_use
             Expanded(child: Divider(color: Colors.white.withOpacity(0.1))),
           ],
         ),

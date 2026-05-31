@@ -6,7 +6,6 @@ class AuthService {
   static const String _tokenKey = 'auth_token';
   static const String _userKey = 'user_data';
   
-  // Demo users storage (replace with actual API)
   final Map<String, Map<String, dynamic>> _demoUsers = {
     'demo@example.com': {
       'password': 'password123',
@@ -42,13 +41,10 @@ class AuthService {
     },
   };
   
-  // Login method
   Future<bool> login(String email, String password) async {
     try {
-      // Simulate network delay
       await Future.delayed(const Duration(seconds: 1));
       
-      // Validate email format
       if (email.isEmpty) {
         throw Exception('Email is required');
       }
@@ -65,7 +61,6 @@ class AuthService {
         throw Exception('Password must be at least 6 characters');
       }
       
-      // Check demo users
       if (_demoUsers.containsKey(email) && _demoUsers[email]!['password'] == password) {
         final userData = _demoUsers[email]!['user'];
         final user = User.fromJson(userData!);
@@ -73,7 +68,6 @@ class AuthService {
         return true;
       }
       
-      // For demo: Accept any valid email/password and create a new user
       if (email.isNotEmpty && password.isNotEmpty) {
         final user = User(
           id: DateTime.now().millisecondsSinceEpoch,
@@ -99,17 +93,14 @@ class AuthService {
     }
   }
   
-  // Register method
   Future<bool> register(String email, String password, String confirmPassword, {
     String? firstName,
     String? lastName,
     String? phone,
   }) async {
     try {
-      // Simulate network delay
       await Future.delayed(const Duration(seconds: 1));
       
-      // Validate email
       if (email.isEmpty) {
         throw Exception('Email is required');
       }
@@ -118,7 +109,6 @@ class AuthService {
         throw Exception('Please enter a valid email address');
       }
       
-      // Validate password
       if (password.isEmpty) {
         throw Exception('Password is required');
       }
@@ -127,17 +117,14 @@ class AuthService {
         throw Exception('Password must be at least 6 characters');
       }
       
-      // Validate password confirmation
       if (password != confirmPassword) {
         throw Exception('Passwords do not match');
       }
       
-      // Check if email already exists in demo
       if (_demoUsers.containsKey(email)) {
         throw Exception('Email already registered');
       }
       
-      // Create new user
       final user = User(
         id: DateTime.now().millisecondsSinceEpoch,
         email: email,
@@ -152,13 +139,11 @@ class AuthService {
         createdAt: DateTime.now(),
       );
       
-      // Store in demo users (in real app, this would be API call)
       _demoUsers[email] = {
         'password': password,
         'user': user.toJson(),
       };
       
-      // Auto-login after registration
       await _saveUserData(user);
       return true;
       
@@ -167,14 +152,12 @@ class AuthService {
     }
   }
   
-  // Save user data to local storage
   Future<void> _saveUserData(User user) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_tokenKey, 'token_${user.id}_${DateTime.now().millisecondsSinceEpoch}');
     await prefs.setString(_userKey, jsonEncode(user.toJson()));
   }
   
-  // Get user data from local storage
   Future<User?> getUserData() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -189,7 +172,6 @@ class AuthService {
     }
   }
   
-  // Check if user is logged in
   Future<bool> isLoggedIn() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -200,14 +182,12 @@ class AuthService {
     }
   }
   
-  // Logout user
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_tokenKey);
     await prefs.remove(_userKey);
   }
   
-  // Get auth token
   Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_tokenKey);
