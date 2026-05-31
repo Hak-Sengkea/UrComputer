@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:mobile/features/testing/test_load_data.dart';
 
 import '../features/home/home_screen.dart';
 import '../features/products/builder_screen.dart';
@@ -51,6 +52,10 @@ final appRouter = GoRouter(
           path: '/settings',
           name: 'settings',
           builder: (context, state) => const SettingScreen(),
+        ),
+          GoRoute(
+          path: '/testing',
+          builder: (context, state) => const TestPage(),
         ),
       ],
     ),
