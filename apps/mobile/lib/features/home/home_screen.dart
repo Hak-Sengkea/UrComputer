@@ -24,13 +24,13 @@ class HomeScreen extends StatelessWidget {
     final authProvider = context.read<AuthProvider>();
     final List<Product> products = productProvider.products;
     final List<Product> pcComponents = products
-        .where((p) => p.categoryId == 3)
+        .where((p) => p.categoryId == 'c81dfa01-9f9e-4c74-a029-79257e84f503')
         .toList();
     final List<Product> pcBuilds = products
-        .where((p) => p.categoryId == 2)
+        .where((p) => p.categoryId == 'c81dfa01-9f9e-4c74-a029-79257e84f502')
         .toList();
     final List<Product> laptops = products
-        .where((p) => p.categoryId == 1)
+        .where((p) => p.categoryId == 'c81dfa01-9f9e-4c74-a029-79257e84f501')
         .toList();
 
     return Scaffold(

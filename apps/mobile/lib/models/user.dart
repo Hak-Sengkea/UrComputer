@@ -1,5 +1,5 @@
 class User {
-  final int id;
+  final String id;
   final String email;
   final String firstName;
   final String lastName;
@@ -29,17 +29,19 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'],
+      id: json['id'].toString(),
       email: json['email'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
+      firstName: json['first_name'] ?? json['firstName'] ?? '',
+      lastName: json['last_name'] ?? json['lastName'] ?? '',
       phone: json['phone'],
-      profileImage: json['profileImage'],
+      profileImage: json['profile_image'] ?? json['profileImage'],
       address: json['address'],
       city: json['city'],
       country: json['country'],
-      zipCode: json['zipCode'],
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      zipCode: json['zip_code'] ?? json['zipCode'],
+      createdAt: json['created_at'] != null 
+          ? DateTime.parse(json['created_at']) 
+          : (json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null),
     );
   }
 
@@ -47,15 +49,15 @@ class User {
     return {
       'id': id,
       'email': email,
-      'firstName': firstName,
-      'lastName': lastName,
+      'first_name': firstName,
+      'last_name': lastName,
       'phone': phone,
-      'profileImage': profileImage,
+      'profile_image': profileImage,
       'address': address,
       'city': city,
       'country': country,
-      'zipCode': zipCode,
-      'createdAt': createdAt?.toIso8601String(),
+      'zip_code': zipCode,
+      'created_at': createdAt?.toIso8601String(),
     };
   }
 }
