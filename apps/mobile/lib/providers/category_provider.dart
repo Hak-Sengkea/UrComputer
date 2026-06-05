@@ -29,7 +29,7 @@ class CategoryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Category?> getCategoryById(int id) async {
+  Future<Category?> getCategoryById(String id) async {
     return await _repository.getCategoryById(id);
   }
 

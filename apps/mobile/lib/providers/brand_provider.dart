@@ -29,7 +29,7 @@ class BrandProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Brand?> getBrandById(int id) async {
+  Future<Brand?> getBrandById(String id) async {
     return await _repository.getBrandById(id);
   }
 

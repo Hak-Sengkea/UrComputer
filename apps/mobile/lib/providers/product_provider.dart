@@ -29,7 +29,7 @@ class ProductProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getProductsByCategory(int categoryId) async {
+  Future<void> getProductsByCategory(String categoryId) async {
     _isLoading = true;
     notifyListeners();
     try {
@@ -42,7 +42,7 @@ class ProductProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getProductsByBrand(int brandId) async {
+  Future<void> getProductsByBrand(String brandId) async {
     _isLoading = true;
     notifyListeners();
     try {
@@ -68,7 +68,7 @@ class ProductProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Product?> getProductById(int id) async {
+  Future<Product?> getProductById(String id) async {
     return await _repository.getProductById(id);
   }
 

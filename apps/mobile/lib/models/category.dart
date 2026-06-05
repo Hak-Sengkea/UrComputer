@@ -1,5 +1,5 @@
 class Category {
-  final int id;
+  final String id;
   final String name;
   final String? banner;
   final String? description;
@@ -15,7 +15,7 @@ class Category {
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
-      id: json['id'],
+      id: json['id'].toString(),
       name: json['name'],
       banner: json['banner'],
       description: json['description'],

@@ -34,14 +34,14 @@ class _LandingScreenContent extends StatelessWidget {
 
     Product? heroProduct;
     for (final product in products) {
-      if (product.categoryId == 2) {
+      if (product.categoryId == 'c81dfa01-9f9e-4c74-a029-79257e84f502') {
         heroProduct = product;
         break;
       }
     }
 
     final featuredLaptops = products
-        .where((product) => product.categoryId == 1)
+        .where((product) => product.categoryId == 'c81dfa01-9f9e-4c74-a029-79257e84f501')
         .take(6)
         .toList();
 
