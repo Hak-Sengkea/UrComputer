@@ -76,4 +76,6 @@ class Product {
     if (discount == null || discount == 0) return price;
     return price - (price * discount! / 100);
   }
+
+  get brandName => null;
 }

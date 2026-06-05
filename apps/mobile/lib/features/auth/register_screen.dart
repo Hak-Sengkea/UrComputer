@@ -111,7 +111,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (success && mounted) {
       _showSnackBar('Registration successful!', isError: false);
       
-      // Navigate to the app after successful registration.
+      // ✅ FIXED: Navigate to '/home' after successful registration
       Future.delayed(const Duration(seconds: 1), () {
         if (mounted) {
           context.go('/home');
@@ -151,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   if (_currentStep == 1) {
                     setState(() => _currentStep = 0);
                   } else {
-                    context.go('/');
+                    context.go('/login');
                   }
                 },
               ),
@@ -174,12 +174,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         color: const Color(0xFF13161C),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: activeColor.withValues(alpha: 0.35),
+                          color: activeColor.withAlpha(90),
                           width: 1.5,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: activeColor.withValues(alpha: 0.08),
+                            color: activeColor.withAlpha(20),
                             blurRadius: 20,
                             spreadRadius: 2,
                           ),
@@ -251,10 +251,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: const Color(0xFF13161C).withValues(alpha: 0.5),
+        color: const Color(0xFF13161C).withAlpha(128),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.05),
+          color: Colors.white.withAlpha(13),
           width: 1,
         ),
       ),
@@ -275,8 +275,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppTheme.neonCyan.withValues(alpha: _currentStep > 0 ? 0.8 : 0.2),
-                    AppTheme.neonPurple.withValues(alpha: _currentStep > 0 ? 0.8 : 0.1),
+                    AppTheme.neonCyan.withAlpha(_currentStep > 0 ? 204 : 51),
+                    AppTheme.neonPurple.withAlpha(_currentStep > 0 ? 204 : 26),
                   ],
                 ),
               ),
@@ -313,19 +313,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
             color: isCompleted
                 ? activeColor
                 : isActive
-                    ? activeColor.withValues(alpha: 0.15)
+                    ? activeColor.withAlpha(38)
                     : const Color(0xFF1C1F26),
             shape: BoxShape.circle,
             border: Border.all(
               color: isCompleted || isActive
                   ? activeColor
-                  : Colors.white.withValues(alpha: 0.1),
+                  : Colors.white.withAlpha(26),
               width: 1.5,
             ),
             boxShadow: isCompleted || isActive
                 ? [
                     BoxShadow(
-                      color: activeColor.withValues(alpha: 0.35),
+                      color: activeColor.withAlpha(90),
                       blurRadius: 8,
                       spreadRadius: 1,
                     ),
@@ -495,9 +495,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.red.withValues(alpha: 0.1),
+              color: Colors.red.withAlpha(26),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
+              border: Border.all(color: Colors.red.withAlpha(77)),
             ),
             child: Row(
               children: [
@@ -543,7 +543,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             color: AppTheme.cardBg,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: Colors.white.withAlpha(20),
               width: 1,
             ),
           ),
@@ -626,7 +626,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       children: [
         Row(
           children: [
-            Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.08))),
+            Expanded(child: Divider(color: Colors.white.withAlpha(20))),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Text(
@@ -637,7 +637,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
             ),
-            Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.08))),
+            Expanded(child: Divider(color: Colors.white.withAlpha(20))),
           ],
         ),
         const SizedBox(height: 12),
@@ -653,7 +653,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               onPressed: () => _showSnackBar('Google link coming soon'),
             ),
           ],
-          // Ignore deprecated withOpacity
         ),
       ],
     );

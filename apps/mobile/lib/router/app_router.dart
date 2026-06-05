@@ -18,14 +18,23 @@ GoRouter createRouter(AuthProvider authProvider) {
     redirect: (context, state) {
       final location = state.matchedLocation;
       final isLoggedIn = authProvider.isLoggedIn;
+      
+      // Public routes (no login required)
       final isPublicRoute = location == '/' ||
           location == '/login' ||
           location == '/register';
 
-      if (isLoggedIn && (location == '/' || location == '/login' || location == '/register')) {
+      // If logged in and trying to access landing page, go to home
+      if (isLoggedIn && location == '/') {
+        return '/home';
+      }
+      
+      // If logged in and trying to access login/register, go to home
+      if (isLoggedIn && (location == '/login' || location == '/register')) {
         return '/home';
       }
 
+      // If not logged in and trying to access protected routes, go to login
       if (!isLoggedIn && !isPublicRoute) {
         return '/login';
       }
@@ -33,6 +42,7 @@ GoRouter createRouter(AuthProvider authProvider) {
       return null;
     },
     routes: [
+      // Public routes (no bottom navigation)
       GoRoute(
         path: '/',
         name: 'landing',
@@ -48,6 +58,8 @@ GoRouter createRouter(AuthProvider authProvider) {
         name: 'register',
         builder: (context, state) => const RegisterScreen(),
       ),
+      
+      // Protected routes (with bottom navigation)
       ShellRoute(
         builder: (context, state, child) {
           return MainShell(child: child);
