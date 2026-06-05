@@ -1,4 +1,4 @@
-[
+{"brands":[
   {
     "id": 1,
     "name": "ASUS",
@@ -58,5 +58,30 @@
     "id": 12,
     "name": "Logitech",
     "image": "https://upload.wikimedia.org/wikipedia/commons/7/77/Logitech_logo.svg"
+  },
+  {
+    "id": 13,
+    "name": "NVIDIA",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/2/21/Nvidia_logo.svg"
+  },
+  {
+    "id": 14,
+    "name": "Intel",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Intel-logo.svg"
+  },
+  {
+    "id": 15,
+    "name": "Custom",
+    "image": ""
+  },
+  {
+    "id": 16,
+    "name": "AMD",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/2/2f/AMD_Logo.svg"
+  },
+  {
+    "id": 17,
+    "name": "ASUS ROG",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/2/2f/ASUS_ROG_logo.svg"
   }
-]
+]}

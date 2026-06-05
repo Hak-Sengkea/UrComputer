@@ -60,7 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final success = await authProvider.login(email, password);
     
     if (success && mounted) {
-      context.go('/');
+      // Navigate to home on success
+      context.go('/home');
     } else if (mounted) {
       _showSnackBar(authProvider.errorMessage ?? 'Login failed. Please try again.');
     }
@@ -370,7 +371,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return GestureDetector(
       onTap: () {
         if (text == 'Support') {
-          context.push('/support');
+          _showSnackBar('Support page coming soon');
         } else {
           _showSnackBar('$text page coming soon');
         }

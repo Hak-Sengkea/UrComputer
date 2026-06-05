@@ -5,12 +5,12 @@ class AppStateProvider extends ChangeNotifier {
   User? _currentUser;
   bool _isLoading = false;
   String? _errorMessage;
-  List<int> _cartItems = [];
+  final List<String> _cartItems = [];
 
   User? get currentUser => _currentUser;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
-  List<int> get cartItems => _cartItems;
+  List<String> get cartItems => _cartItems;
   int get cartCount => _cartItems.length;
 
   void setCurrentUser(User user) {
@@ -38,14 +38,14 @@ class AppStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addToCart(int productId) {
+  void addToCart(String productId) {
     if (!_cartItems.contains(productId)) {
       _cartItems.add(productId);
       notifyListeners();
     }
   }
 
-  void removeFromCart(int productId) {
+  void removeFromCart(String productId) {
     _cartItems.removeWhere((id) => id == productId);
     notifyListeners();
   }
@@ -55,6 +55,5 @@ class AppStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isInCart(int productId) => _cartItems.contains(productId);
+  bool isInCart(String productId) => _cartItems.contains(productId);
 }
-

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../models/user.dart';
 import '../../data/repository/user_repository.dart';
 
@@ -30,7 +29,7 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<User?> getUserById(int id) async {
+  Future<User?> getUserById(String id) async {
     return await _repository.getUserById(id);
   }
 
@@ -56,4 +55,3 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-

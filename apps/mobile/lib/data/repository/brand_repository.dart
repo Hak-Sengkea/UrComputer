@@ -1,30 +1,41 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../models/brand.dart';
-import '../data_provider.dart';
 
 class BrandRepository {
-  final JsonDataProvider _dataProvider = JsonDataProvider();
+  final SupabaseClient _supabase = Supabase.instance.client;
 
   Future<List<Brand>> getAllBrands() async {
-    final data = await _dataProvider.loadBrands();
-    final List<dynamic> brandsJson = data['brands'];
-    return brandsJson.map((json) => Brand.fromJson(json)).toList();
+    final response = await _supabase
+        .from('brands')
+        .select()
+        .order('name', ascending: true);
+    return (response as List).map((json) => Brand.fromJson(json)).toList();
   }
 
-  Future<Brand?> getBrandById(int id) async {
-    final brands = await getAllBrands();
+  Future<Brand?> getBrandById(String id) async {
     try {
-      return brands.firstWhere((b) => b.id == id);
+      final response = await _supabase
+          .from('brands')
+          .select()
+          .eq('id', id)
+          .maybeSingle();
+      if (response == null) return null;
+      return Brand.fromJson(response);
     } catch (e) {
       return null;
     }
   }
 
   Future<List<Brand>> searchBrands(String query) async {
-    final brands = await getAllBrands();
-    final lowerQuery = query.toLowerCase();
-    return brands
-        .where((b) => b.name.toLowerCase().contains(lowerQuery) ||
-            (b.description?.toLowerCase().contains(lowerQuery) ?? false))
-        .toList();
+    try {
+      final response = await _supabase
+          .from('brands')
+          .select()
+          .or('name.ilike.%$query%,description.ilike.%$query%')
+          .order('name', ascending: true);
+      return (response as List).map((json) => Brand.fromJson(json)).toList();
+    } catch (e) {
+      return [];
+    }
   }
 }

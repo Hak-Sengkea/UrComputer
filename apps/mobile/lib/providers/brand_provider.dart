@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../models/brand.dart';
 import '../../data/repository/brand_repository.dart';
 
@@ -30,7 +29,7 @@ class BrandProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Brand?> getBrandById(int id) async {
+  Future<Brand?> getBrandById(String id) async {
     return await _repository.getBrandById(id);
   }
 
@@ -52,4 +51,3 @@ class BrandProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-

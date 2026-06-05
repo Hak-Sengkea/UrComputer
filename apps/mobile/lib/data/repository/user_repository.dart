@@ -1,41 +1,55 @@
+import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 import '../../models/user.dart';
-import '../data_provider.dart';
 
 class UserRepository {
-  final JsonDataProvider _dataProvider = JsonDataProvider();
+  final SupabaseClient _supabase = Supabase.instance.client;
 
   Future<List<User>> getAllUsers() async {
-    final data = await _dataProvider.loadUsers();
-    final List<dynamic> usersJson = data['users'];
-    return usersJson.map((json) => User.fromJson(json)).toList();
+    final response = await _supabase
+        .from('profiles')
+        .select()
+        .order('first_name', ascending: true);
+    return (response as List).map((json) => User.fromJson(json)).toList();
   }
 
-  Future<User?> getUserById(int id) async {
-    final users = await getAllUsers();
+  Future<User?> getUserById(String id) async {
     try {
-      return users.firstWhere((u) => u.id == id);
+      final response = await _supabase
+          .from('profiles')
+          .select()
+          .eq('id', id)
+          .maybeSingle();
+      if (response == null) return null;
+      return User.fromJson(response);
     } catch (e) {
       return null;
     }
   }
 
   Future<User?> getUserByEmail(String email) async {
-    final users = await getAllUsers();
     try {
-      return users.firstWhere((u) => u.email.toLowerCase() == email.toLowerCase());
+      final response = await _supabase
+          .from('profiles')
+          .select()
+          .eq('email', email)
+          .maybeSingle();
+      if (response == null) return null;
+      return User.fromJson(response);
     } catch (e) {
       return null;
     }
   }
 
   Future<List<User>> searchUsers(String query) async {
-    final users = await getAllUsers();
-    final lowerQuery = query.toLowerCase();
-    return users
-        .where((u) => 
-            u.fullName.toLowerCase().contains(lowerQuery) ||
-            u.email.toLowerCase().contains(lowerQuery) ||
-            (u.phone?.contains(query) ?? false))
-        .toList();
+    try {
+      final response = await _supabase
+          .from('profiles')
+          .select()
+          .or('first_name.ilike.%$query%,last_name.ilike.%$query%,email.ilike.%$query%,phone.ilike.%$query%')
+          .order('first_name', ascending: true);
+      return (response as List).map((json) => User.fromJson(json)).toList();
+    } catch (e) {
+      return [];
+    }
   }
 }

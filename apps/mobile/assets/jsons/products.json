@@ -1,112 +1,159 @@
-[
-  {
-    "id": 1,
-    "name": "ASUS ROG Strix G16",
-    "price": 1299,
-    "brand": "ASUS",
-    "stock": 55,
-    "category": "Gaming Laptop",
-    "image": "/small_img/rog_g16.jpg",
-    "description": "Intel Core i7-13650HX, RTX 4060, 16GB DDR5 RAM, 1TB PCIe Gen4 SSD, 165Hz display, Wi-Fi 6E, Windows 11.",
-    "rating": 4.8
-  },
-  {
-    "id": 2,
-    "name": "MSI Katana 15",
-    "price": 1199,
-    "brand": "MSI",
-    "stock": 40,
-    "category": "Gaming Laptop",
-    "image": "/small_img/msi_katana.jpg",
-    "description": "15.6-inch gaming laptop with Intel Core i7, RTX 4050, 16GB RAM, and 1TB SSD.",
-    "rating": 4.7
-  },
-  {
-    "id": 3,
-    "name": "Samsung 990 Pro 1TB SSD",
-    "price": 129,
-    "brand": "Samsung",
-    "stock": 70,
-    "category": "Storage",
-    "image": "/small_img/samsung_ssd.jpg",
-    "description": "High-speed PCIe Gen4 NVMe SSD designed for gaming PCs and workstations.",
-    "rating": 4.9
-  },
-  {
-    "id": 4,
-    "name": "Corsair Vengeance DDR5 32GB",
-    "price": 149,
-    "brand": "Corsair",
-    "stock": 35,
-    "category": "PC Component",
-    "image": "/small_img/corsair_ram.jpg",
-    "description": "32GB DDR5 RAM kit optimized for high-performance gaming and multitasking.",
-    "rating": 4.8
-  },
-  {
-    "id": 5,
-    "name": "Logitech G Pro X Keyboard",
-    "price": 129,
-    "brand": "Logitech",
-    "stock": 50,
-    "category": "Peripheral",
-    "image": "/small_img/logitech_keyboard.jpg",
-    "description": "Mechanical gaming keyboard with customizable RGB lighting and GX switches.",
-    "rating": 4.7
-  },
-  {
-    "id": 6,
-    "name": "Razer DeathAdder V3",
-    "price": 89,
-    "brand": "Razer",
-    "stock": 65,
-    "category": "Peripheral",
-    "image": "/small_img/razer_mouse.jpg",
-    "description": "Ergonomic gaming mouse with ultra-lightweight design and Focus Pro sensor.",
-    "rating": 4.8
-  },
-  {
-    "id": 7,
-    "name": "Apple MacBook Pro M5",
-    "price": 2199,
-    "brand": "Apple",
-    "stock": 20,
-    "category": "Laptop",
-    "image": "/small_img/macbook_m5.jpg",
-    "description": "14-inch MacBook Pro powered by Apple M5 chip, Liquid Retina XDR display, 16GB unified memory, and 1TB SSD.",
-    "rating": 4.9
-  },
-  {
-    "id": 8,
-    "name": "NVIDIA RTX 4070 Super",
-    "price": 699,
-    "brand": "NVIDIA",
-    "stock": 18,
-    "category": "PC Component",
-    "image": "/small_img/rtx_4070.jpg",
-    "description": "High-end graphics card for 1440p and 4K gaming with DLSS 3 support.",
-    "rating": 4.9
-  },
-  {
-    "id": 9,
-    "name": "ASUS TUF Gaming Monitor 27\"",
-    "price": 299,
-    "brand": "ASUS",
-    "stock": 28,
-    "category": "Peripheral",
-    "image": "/small_img/tuf_monitor.jpg",
-    "description": "27-inch Full HD gaming monitor with 165Hz refresh rate and Adaptive Sync.",
-    "rating": 4.6
-  },
-  {
-    "id": 10,
-    "name": "Cooler Master Hyper 212",
-    "price": 45,
-    "brand": "Cooler Master",
-    "stock": 60,
-    "category": "PC Component",
-    "image": "/small_img/hyper212.jpg",
-    "description": "Air CPU cooler with RGB fan and excellent thermal performance.",
-    "rating": 4.5
-  }
-]
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Acer Gaming Headphones",
+      "price": 199,
+      "brandId": 7,
+      "stock": 32,
+      "categoryId": 4,
+      "image": "https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/acer_headphones.jpg",
+      "description": "Immersive gaming headphones with surround sound and RGB accents.",
+      "rating": 4.6
+    },
+
+    {
+      "id": 2,
+      "name": "ASUS Gaming Laptop",
+      "price": 1599,
+      "brandId": 1,
+      "stock": 14,
+      "categoryId": 1,
+      "image": "https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/asus_laptop.jpg",
+      "description": "High-performance ASUS gaming laptop built for competitive gaming.",
+      "rating": 4.8
+    },
+
+    {
+      "id": 3,
+      "name": "ASUS ROG Headset",
+      "price": 249,
+      "brandId": 17,
+      "stock": 21,
+      "categoryId": 4,
+      "image": "https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/asus_rog_headphones.webp",
+      "description": "Premium ROG headset with crystal-clear sound and deep bass.",
+      "rating": 4.7
+    },
+
+    {
+      "id": 4,
+      "name": "Dell Gaming Laptop",
+      "price": 1399,
+      "brandId": 5,
+      "stock": 10,
+      "categoryId": 1,
+      "image": "https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/dell_laptop.jpg",
+      "description": "Powerful Dell gaming laptop with RTX graphics and fast refresh display.",
+      "rating": 4.5
+    },
+
+    {
+      "id": 5,
+      "name": "NVIDIA RTX Graphics Card",
+      "price": 899,
+      "brandId": 13,
+      "stock": 8,
+      "categoryId": 3,
+      "image": "https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/gpu.jpg",
+      "description": "Next-generation graphics card designed for high-end gaming and rendering.",
+      "rating": 4.9
+    },
+
+    {
+      "id": 6,
+      "name": "RGB Gaming GPU",
+      "price": 999,
+      "brandId": 13,
+      "stock": 6,
+      "categoryId": 3,
+      "image": "https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/gpu1.png",
+      "description": "RGB-powered gaming GPU built for ultra performance and aesthetics.",
+      "rating": 4.8
+    },
+
+    {
+      "id": 7,
+      "name": "Intel Core i7 Processor",
+      "price": 399,
+      "brandId": 14,
+      "stock": 26,
+      "categoryId": 3,
+      "image": "https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/intel_corei7.jpg",
+      "description": "High-speed Intel processor optimized for gaming and multitasking.",
+      "rating": 4.7
+    },
+
+    {
+      "id": 8,
+      "name": "Intel Core i9 Processor",
+      "price": 599,
+      "brandId": 14,
+      "stock": 18,
+      "categoryId": 3,
+      "image": "https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/Intel_corei9.jpg",
+      "description": "Flagship Intel CPU delivering elite gaming and workstation performance.",
+      "rating": 4.9
+    },
+
+    {
+      "id": 9,
+      "name": "Custom Gaming PC Build",
+      "price": 2499,
+      "brandId": 15,
+      "stock": 4,
+      "categoryId": 2,
+      "image": "https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/pc_build.jpeg",
+      "description": "Ultimate custom-built RGB gaming PC with enthusiast-grade hardware.",
+      "rating": 5.0
+    },
+
+    {
+      "id": 10,
+      "name": "Corsair RGB RAM",
+      "price": 149,
+      "brandId": 9,
+      "stock": 40,
+      "categoryId": 3,
+      "image": "https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/ram.jpg",
+      "description": "High-speed DDR5 RGB memory designed for modern gaming systems.",
+      "rating": 4.6
+    },
+
+    {
+      "id": 11,
+      "name": "ROG Gaming Laptop",
+      "price": 1899,
+      "brandId": 17,
+      "stock": 11,
+      "categoryId": 1,
+      "image": "https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/rog_laptop.jpg",
+      "description": "Premium ROG gaming laptop engineered for high FPS gaming.",
+      "rating": 4.9
+    },
+
+    {
+      "id": 12,
+      "name": "AMD Ryzen 9000 Series",
+      "price": 699,
+      "brandId": 16,
+      "stock": 15,
+      "categoryId": 3,
+      "image": "https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/ryzen_amd9000series.jpg",
+      "description": "Next-generation Ryzen processor with exceptional gaming performance.",
+      "rating": 4.8
+    },
+
+    {
+      "id": 13,
+      "name": "ASUS TUF Gaming Laptop",
+      "price": 1299,
+      "brandId": 1,
+      "stock": 17,
+      "categoryId": 1,
+      "image": "https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/tuf_laptop.jpg",
+      "description": "Durable ASUS TUF gaming laptop with powerful cooling and performance.",
+      "rating": 4.7
+    }
+  ]
+}

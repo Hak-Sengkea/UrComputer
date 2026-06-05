@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/providers/app_state_provider.dart';
+import 'package:mobile/providers/auth_provider.dart';
+import 'package:mobile/providers/brand_provider.dart';
+import 'package:mobile/providers/category_provider.dart';
+import 'package:mobile/providers/product_provider.dart';
+import 'package:mobile/providers/user_provider.dart';
 import 'package:provider/provider.dart';
+
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
-import 'providers/auth_provider.dart';
 
 class UrComputerApp extends StatelessWidget {
   const UrComputerApp({super.key});
@@ -12,18 +18,25 @@ class UrComputerApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => AppStateProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()..loadAllUsers()),
+        ChangeNotifierProvider(
+          create: (_) => ProductProvider()..loadAllProducts(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CategoryProvider()..loadAllCategories(),
+        ),
+        ChangeNotifierProvider(create: (_) => BrandProvider()..loadAllBrands()),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
-          // Create router with authProvider
-          final router = createRouter(authProvider);
-          
           return MaterialApp.router(
             title: 'UrComputer',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
-            routerConfig: router,
+            themeMode: ThemeMode.dark,
+            routerConfig: createRouter(authProvider),
           );
         },
       ),

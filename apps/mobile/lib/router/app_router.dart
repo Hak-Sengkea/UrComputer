@@ -1,37 +1,43 @@
 import 'package:go_router/go_router.dart';
-import '../features/home/home_screen.dart';
-import '../features/products/builder_screen.dart';
-import '../features/cart/cart_screen.dart';
-import '../features/support/support_screen.dart';
-import '../widgets/main_shell.dart';
-import '../features/settings/setting_screen.dart';
-import '../features/auth/login_screen.dart';
-import '../features/auth/register_screen.dart';
-import '../features/testing/test_load_data.dart';
-import '../providers/auth_provider.dart';
+import 'package:mobile/features/auth/login_screen.dart';
+import 'package:mobile/features/auth/register_screen.dart';
+import 'package:mobile/features/cart/cart_screen.dart';
+import 'package:mobile/features/home/home_screen.dart';
+import 'package:mobile/features/landing/landing_screen.dart';
+import 'package:mobile/features/products/builder_screen.dart';
+import 'package:mobile/features/settings/setting_screen.dart';
+import 'package:mobile/features/support/support_screen.dart';
+import 'package:mobile/features/testing/test_load_data.dart';
+import 'package:mobile/providers/auth_provider.dart';
+import 'package:mobile/widgets/main_shell.dart';
 
-// Change from final appRouter to a function
 GoRouter createRouter(AuthProvider authProvider) {
   return GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/',
+    refreshListenable: authProvider,
     redirect: (context, state) {
-      // Use the authProvider passed in
+      final location = state.matchedLocation;
       final isLoggedIn = authProvider.isLoggedIn;
-      final isAuthRoute = state.matchedLocation == '/login' || 
-                          state.matchedLocation == '/register';
-      
-      if (isLoggedIn && isAuthRoute) {
-        return '/';
+      final isPublicRoute = location == '/' ||
+          location == '/login' ||
+          location == '/register';
+
+      if (isLoggedIn && (location == '/' || location == '/login' || location == '/register')) {
+        return '/home';
       }
-      
-      if (!isLoggedIn && !isAuthRoute) {
+
+      if (!isLoggedIn && !isPublicRoute) {
         return '/login';
       }
-      
+
       return null;
     },
     routes: [
-      // Auth routes
+      GoRoute(
+        path: '/',
+        name: 'landing',
+        builder: (context, state) => const LandingScreen(),
+      ),
       GoRoute(
         path: '/login',
         name: 'login',
@@ -42,15 +48,13 @@ GoRouter createRouter(AuthProvider authProvider) {
         name: 'register',
         builder: (context, state) => const RegisterScreen(),
       ),
-      
-      // Protected routes
       ShellRoute(
         builder: (context, state, child) {
           return MainShell(child: child);
         },
         routes: [
           GoRoute(
-            path: '/',
+            path: '/home',
             name: 'home',
             builder: (context, state) => const HomeScreen(),
           ),

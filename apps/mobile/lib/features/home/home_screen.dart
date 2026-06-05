@@ -1,121 +1,136 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile/const/app_sizes.dart';
+import 'package:mobile/features/home/widgets/category_overview.dart';
+import 'package:mobile/features/home/widgets/hero_section.dart';
+import 'package:mobile/features/home/widgets/product_section.dart';
+import 'package:mobile/models/product.dart';
+import 'package:mobile/providers/auth_provider.dart';
+import 'package:mobile/providers/brand_provider.dart';
+import 'package:mobile/providers/product_provider.dart';
+import 'package:mobile/theme/app_colors.dart';
+import 'package:mobile/theme/app_text_style.dart';
+import 'package:mobile/widgets/heading.dart';
 import 'package:provider/provider.dart';
-import '../../providers/auth_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-    
+    final theme = Theme.of(context);
+    final productProvider = context.watch<ProductProvider>();
+    final brandProvider = context.watch<BrandProvider>();
+    final authProvider = context.read<AuthProvider>();
+    final List<Product> products = productProvider.products;
+    final List<Product> pcComponents = products
+        .where((p) => p.categoryId == 'c81dfa01-9f9e-4c74-a029-79257e84f503')
+        .toList();
+    final List<Product> pcBuilds = products
+        .where((p) => p.categoryId == 'c81dfa01-9f9e-4c74-a029-79257e84f502')
+        .toList();
+    final List<Product> laptops = products
+        .where((p) => p.categoryId == 'c81dfa01-9f9e-4c74-a029-79257e84f501')
+        .toList();
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'UrComputer',
-          style: TextStyle(
-            fontFamily: 'SpaceMono',
-            fontWeight: FontWeight.bold,
+      backgroundColor: theme.colorScheme.surface,
+      appBar: Heading(
+        onMenuPressed: () {},
+        actions: [
+          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+          IconButton(
+            tooltip: 'Logout',
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await authProvider.logout();
+              if (context.mounted) {
+                context.go('/login');
+              }
+            },
           ),
-        ),
-        backgroundColor: Colors.black,
+        ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Success Icon
-            const Icon(
-              Icons.check_circle,
-              size: 80,
-              color: Colors.green,
-            ),
-            const SizedBox(height: 20),
-            
-            // Welcome Message with User Email
-            Text(
-              'Welcome ${authProvider.currentUser?.email ?? 'User'}!',
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 10),
-            
-            // Home Screen Text
-            Text(
-              'Home Screen',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey[300],
-              ),
-            ),
-            const SizedBox(height: 20),
-            
-            // Success Message
-            Text(
-              'You are successfully logged in!',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 14,
-                color: Colors.grey[500],
-              ),
-            ),
-            const SizedBox(height: 40),
-            
-            // Logout Button
-            ElevatedButton(
-              onPressed: () async {
-                // Show confirmation dialog
-                final shouldLogout = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Logout'),
-                    content: const Text('Are you sure you want to logout?'),
-                    backgroundColor: Colors.grey[900],
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.red,
-                        ),
-                        child: const Text('Logout'),
-                      ),
-                    ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.edgeMarginMobile,
+          ),
+          child: Column(
+            children: [
+              if (productProvider.isLoading) ...[
+                SizedBox(
+                  height: 320,
+                  child: Center(child: const CircularProgressIndicator()),
+                ),
+              ] else if (productProvider.errorMessage != null) ...[
+                SizedBox(
+                  height: 320,
+                  child: Center(
+                    child: Text(
+                      productProvider.errorMessage!,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                );
-                
-                if (shouldLogout == true) {
-                  await authProvider.logout();
-                  if (context.mounted) {
-                    context.go('/login');
-                  }
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                minimumSize: const Size(200, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                ),
+              ] else if (pcComponents.isEmpty) ...[
+                SizedBox(
+                  height: 320,
+                  child: Center(
+                    child: const Text('No PC components available'),
+                  ),
+                ),
+              ] else ...[
+                HeroSection(pcComponents: pcComponents),
+              ],
+              const SizedBox(height: AppSizes.space12),
+              CategoryOverview(
+                icons: [
+                  Icons.laptop,
+                  Icons.headphones,
+                  Icons.memory,
+                  Icons.computer,
+                  Icons.router,
+                  Icons.storage,
+                ],
+                labels: ['Laptop', 'Audio', 'RAM', 'PC', 'Network', 'Storage'],
+              ),
+              const SizedBox(height: AppSizes.space8),
+              ProductSection(title: 'Custom PC Builds', products: pcBuilds),
+              ProductSection(title: 'Gaming Laptops', products: laptops),
+              const SizedBox(height: AppSizes.space16),
+              SizedBox(
+                height: 60.0,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: brandProvider.brands.length,
+                  itemBuilder: (context, index) {
+                    final brand = brandProvider.brands[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceVariant,
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusMedium,
+                          ),
+                        ),
+                        child: Chip(
+                          label: Text(
+                            brand.name,
+                            style: AppTextStyle.displaySmall.copyWith(
+                              color: AppColors.onPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
-              child: const Text(
-                'LOGOUT',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
+              const SizedBox(height: AppSizes.space16),
+            ],
+          ),
         ),
       ),
     );
