@@ -3,7 +3,11 @@ import '../models/user.dart';
 
 class AuthService {
   final SupabaseClient _supabase = Supabase.instance.client;
+
+  // ✅ FIXED: Return the actual auth state stream, not null
+  Stream<AuthState> get authStateChanges => _supabase.auth.onAuthStateChange;
   
+  // Login method
   Future<bool> login(String email, String password) async {
     try {
       // Validate email format
@@ -105,7 +109,7 @@ class AuthService {
           city: null,
           country: null,
           zipCode: null,
-          createdAt: DateTime.tryParse(sessionUser.createdAt),
+          createdAt: DateTime.tryParse(sessionUser.createdAt ?? ''),
         );
       }
       
