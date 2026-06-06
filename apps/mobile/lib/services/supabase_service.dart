@@ -9,7 +9,6 @@ class SupabaseService {
 
   final SupabaseClient _client = Supabase.instance.client;
 
-  // Get products by category ID
   Future<List<Product>> getProductsByCategoryId(String categoryId) async {
     try {
       final response = await _client
@@ -24,7 +23,6 @@ class SupabaseService {
     }
   }
 
-  // Get product by ID
   Future<Product?> getProductById(String id) async {
     try {
       final response = await _client
@@ -38,7 +36,6 @@ class SupabaseService {
     }
   }
 
-  // Get all categories
   Future<List<Map<String, dynamic>>> getCategories() async {
     try {
       final response = await _client
@@ -51,7 +48,6 @@ class SupabaseService {
     }
   }
 
-  // PC Builds CRUD
   Future<List<PCBuild>> getUserBuilds(String userId) async {
     try {
       final response = await _client
@@ -88,7 +84,6 @@ class SupabaseService {
     }
   }
 
-  // Search products
   Future<List<Product>> searchProducts(String query) async {
     try {
       final response = await _client
