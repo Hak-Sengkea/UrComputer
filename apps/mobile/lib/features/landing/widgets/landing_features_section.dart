@@ -61,7 +61,7 @@ class LandingFeatureCard extends StatelessWidget {
   final String title;
   final String subtitle;
 
-  const LandingFeatureCard({
+  const LandingFeatureCard({super.key, 
     required this.icon,
     required this.title,
     required this.subtitle,
@@ -77,7 +77,7 @@ class LandingFeatureCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceVariant,
         borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-        border: Border.all(color: AppColors.outline.withOpacity(0.2)),
+        border: Border.all(color: AppColors.outline.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,7 +86,7 @@ class LandingFeatureCard extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
             ),
             child: Icon(icon, color: AppColors.primary),
@@ -103,7 +103,7 @@ class LandingFeatureCard extends StatelessWidget {
           Text(
             subtitle,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: AppColors.onSurface.withOpacity(0.6),
+              color: AppColors.onSurface.withValues(alpha: 0.6),
             ),
           ),
         ],

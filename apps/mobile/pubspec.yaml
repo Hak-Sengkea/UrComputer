@@ -39,6 +39,7 @@ dependencies:
   cached_network_image: ^3.4.1
   data: ^0.15.2
   supabase_flutter: ^2.8.0
+  flutter_dotenv: ^6.0.1
 
 dev_dependencies:
   flutter_test:
@@ -66,7 +67,7 @@ flutter:
     - assets/jsons/
     - assets/images/
     - assets/icons/
-
+    - .env
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

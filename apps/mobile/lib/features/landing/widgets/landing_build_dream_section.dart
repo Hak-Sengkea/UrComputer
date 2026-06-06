@@ -40,8 +40,8 @@ class LandingBuildDreamSection extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.05),
-                    Colors.black.withOpacity(0.7),
+                    Colors.black.withValues(alpha: 0.05),
+                    Colors.black.withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -63,7 +63,7 @@ class LandingBuildDreamSection extends StatelessWidget {
                   Text(
                     description,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: AppColors.onPrimary.withOpacity(0.8),
+                      color: AppColors.onPrimary.withValues(alpha: 0.8),
                     ),
                   ),
                   const SizedBox(height: AppSizes.space12),
