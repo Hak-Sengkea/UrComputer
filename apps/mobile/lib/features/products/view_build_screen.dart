@@ -4,19 +4,19 @@ import '../../models/pc_build.dart';
 import '../../models/product.dart';
 
 class ViewBuildScreen extends StatelessWidget {
-  final PCBuild pcBuild;  // ✅ Renamed from 'build' to 'pcBuild'
+  final PCBuild pcBuild; 
   
   const ViewBuildScreen({super.key, required this.pcBuild, required PCBuild build});
 
   @override
   Widget build(BuildContext context) {
-    final componentsList = pcBuild.components.entries  // ✅ Use pcBuild, not build
+    final componentsList = pcBuild.components.entries
         .where((entry) => entry.value != null)
         .toList();
     
     return Scaffold(
       appBar: AppBar(
-        title: Text(pcBuild.buildName),  // ✅ Use pcBuild
+        title: Text(pcBuild.buildName), 
         backgroundColor: Colors.black,
       ),
       body: ListView(
@@ -30,7 +30,7 @@ class ViewBuildScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (pcBuild.description != null)  // ✅ Use pcBuild
+                  if (pcBuild.description != null)  
                     Text(
                       pcBuild.description!,
                       style: TextStyle(color: Colors.grey[400]),
@@ -40,7 +40,7 @@ class ViewBuildScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Created: ${_formatDate(pcBuild.createdAt)}',  // ✅ Use pcBuild
+                        'Created: ${_formatDate(pcBuild.createdAt)}', 
                         style: TextStyle(color: Colors.grey[500], fontSize: 12),
                       ),
                       Container(
@@ -93,7 +93,7 @@ class ViewBuildScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  '\$${pcBuild.totalPrice.toStringAsFixed(2)}',  // ✅ Use pcBuild
+                  '\$${pcBuild.totalPrice.toStringAsFixed(2)}',  
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/features/products/componet_selection_screen.dart';
+import 'package:mobile/features/products/component_selection_screen.dart';
 import 'package:mobile/models/product.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -224,7 +224,6 @@ class _BuilderScreenState extends State<BuilderScreen> {
     IconData icon,
   ) {
     final component = provider.selectedComponents[type];
-    final isOptional = type == 'Cooler';
     
     return GestureDetector(
       onTap: () async {
@@ -293,7 +292,7 @@ class _BuilderScreenState extends State<BuilderScreen> {
                     )
                   else
                     Text(
-                      isOptional ? 'Add Cooler (Optional)' : 'Select ${provider.getTypeLabel(type)}',
+                      'Select ${provider.getTypeLabel(type)}',  // ✅ Changed: removed "Optional" logic
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[600],

@@ -111,7 +111,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (success && mounted) {
       _showSnackBar('Registration successful!', isError: false);
       
-      // ✅ FIXED: Navigate to '/home' after successful registration
+      
       Future.delayed(const Duration(seconds: 1), () {
         if (mounted) {
           context.go('/home');

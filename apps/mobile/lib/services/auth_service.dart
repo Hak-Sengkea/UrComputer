@@ -4,7 +4,6 @@ import '../models/user.dart';
 class AuthService {
   final SupabaseClient _supabase = Supabase.instance.client;
 
-  // ✅ FIXED: Return the actual auth state stream, not null
   Stream<AuthState> get authStateChanges => _supabase.auth.onAuthStateChange;
   
   // Login method
