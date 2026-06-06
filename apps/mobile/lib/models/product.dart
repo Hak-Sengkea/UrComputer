@@ -1,11 +1,13 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 class Product {
-  final int id;
+  final String id;
   final String name;
   final String? description;
   final double price;
   final double? discount;
-  final int categoryId;
-  final int brandId;
+  final String categoryId;
+  final String brandId;
   final String? image;
   final int? stock;
   final double? rating;
@@ -26,18 +28,31 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
+    String? rawImage = json['image'];
+    String? resolvedImage = rawImage;
+
+    if (rawImage != null && rawImage.isNotEmpty) {
+      if (rawImage.startsWith('http')) {
+        // Keep the absolute URL as-is (e.g. loading from the old bucket where files are already hosted)
+        resolvedImage = rawImage;
+      } else {
+        // Resolve relative paths (e.g. 'acer_headphones.jpg') dynamically using the active Supabase bucket
+        resolvedImage = Supabase.instance.client.storage.from('products').getPublicUrl(rawImage);
+      }
+    }
+
     return Product(
-      id: json['id'],
+      id: json['id'].toString(),
       name: json['name'],
       description: json['description'],
       price: (json['price'] as num).toDouble(),
       discount: json['discount'] != null ? (json['discount'] as num).toDouble() : null,
-      categoryId: json['categoryId'],
-      brandId: json['brandId'],
-      image: json['image'],
+      categoryId: (json['category_id'] ?? json['categoryId']).toString(),
+      brandId: (json['brand_id'] ?? json['brandId']).toString(),
+      image: resolvedImage,
       stock: json['stock'],
       rating: json['rating'] != null ? (json['rating'] as num).toDouble() : null,
-      reviews: json['reviews'],
+      reviews: json['reviews'] ?? json['reviews_count'],
     );
   }
 
@@ -48,12 +63,12 @@ class Product {
       'description': description,
       'price': price,
       'discount': discount,
-      'categoryId': categoryId,
-      'brandId': brandId,
+      'category_id': categoryId,
+      'brand_id': brandId,
       'image': image,
       'stock': stock,
       'rating': rating,
-      'reviews': reviews,
+      'reviews_count': reviews,
     };
   }
 

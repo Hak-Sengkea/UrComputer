@@ -1,53 +1,12 @@
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 import '../models/user.dart';
 
 class AuthService {
-  static const String _tokenKey = 'auth_token';
-  static const String _userKey = 'user_data';
-  
-  // Demo users storage (replace with actual API)
-  final Map<String, Map<String, dynamic>> _demoUsers = {
-    'demo@example.com': {
-      'password': 'password123',
-      'user': {
-        'id': 1,
-        'email': 'demo@example.com',
-        'firstName': 'Demo',
-        'lastName': 'User',
-        'phone': '+1234567890',
-        'profileImage': null,
-        'address': '123 Demo St',
-        'city': 'Demo City',
-        'country': 'Demo Country',
-        'zipCode': '12345',
-        'createdAt': DateTime.now().toIso8601String(),
-      }
-    },
-    'john@example.com': {
-      'password': 'john123',
-      'user': {
-        'id': 2,
-        'email': 'john@example.com',
-        'firstName': 'John',
-        'lastName': 'Doe',
-        'phone': '+0987654321',
-        'profileImage': null,
-        'address': '456 John Ave',
-        'city': 'John City',
-        'country': 'John Country',
-        'zipCode': '67890',
-        'createdAt': DateTime.now().toIso8601String(),
-      }
-    },
-  };
+  final SupabaseClient _supabase = Supabase.instance.client;
   
   // Login method
   Future<bool> login(String email, String password) async {
     try {
-      // Simulate network delay
-      await Future.delayed(const Duration(seconds: 1));
-      
       // Validate email format
       if (email.isEmpty) {
         throw Exception('Email is required');
@@ -65,35 +24,13 @@ class AuthService {
         throw Exception('Password must be at least 6 characters');
       }
       
-      // Check demo users
-      if (_demoUsers.containsKey(email) && _demoUsers[email]!['password'] == password) {
-        final userData = _demoUsers[email]!['user'];
-        final user = User.fromJson(userData!);
-        await _saveUserData(user);
-        return true;
-      }
+      // Sign in with Supabase Auth
+      await _supabase.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
       
-      // For demo: Accept any valid email/password and create a new user
-      if (email.isNotEmpty && password.isNotEmpty) {
-        final user = User(
-          id: DateTime.now().millisecondsSinceEpoch,
-          email: email,
-          firstName: email.split('@')[0],
-          lastName: 'User',
-          phone: null,
-          profileImage: null,
-          address: null,
-          city: null,
-          country: null,
-          zipCode: null,
-          createdAt: DateTime.now(),
-        );
-        
-        await _saveUserData(user);
-        return true;
-      }
-      
-      throw Exception('Invalid email or password');
+      return true;
     } catch (e) {
       throw Exception('Login failed: ${e.toString().replaceFirst('Exception: ', '')}');
     }
@@ -106,9 +43,6 @@ class AuthService {
     String? phone,
   }) async {
     try {
-      // Simulate network delay
-      await Future.delayed(const Duration(seconds: 1));
-      
       // Validate email
       if (email.isEmpty) {
         throw Exception('Email is required');
@@ -132,34 +66,17 @@ class AuthService {
         throw Exception('Passwords do not match');
       }
       
-      // Check if email already exists in demo
-      if (_demoUsers.containsKey(email)) {
-        throw Exception('Email already registered');
-      }
-      
-      // Create new user
-      final user = User(
-        id: DateTime.now().millisecondsSinceEpoch,
+      // Sign up with Supabase Auth
+      await _supabase.auth.signUp(
         email: email,
-        firstName: firstName ?? email.split('@')[0],
-        lastName: lastName ?? 'User',
-        phone: phone,
-        profileImage: null,
-        address: null,
-        city: null,
-        country: null,
-        zipCode: null,
-        createdAt: DateTime.now(),
+        password: password,
+        data: {
+          'first_name': firstName ?? '',
+          'last_name': lastName ?? '',
+          'phone': phone ?? '',
+        },
       );
       
-      // Store in demo users (in real app, this would be API call)
-      _demoUsers[email] = {
-        'password': password,
-        'user': user.toJson(),
-      };
-      
-      // Auto-login after registration
-      await _saveUserData(user);
       return true;
       
     } catch (e) {
@@ -167,23 +84,36 @@ class AuthService {
     }
   }
   
-  // Save user data to local storage
-  Future<void> _saveUserData(User user) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_tokenKey, 'token_${user.id}_${DateTime.now().millisecondsSinceEpoch}');
-    await prefs.setString(_userKey, jsonEncode(user.toJson()));
-  }
-  
-  // Get user data from local storage
+  // Get user data from profiles table or session fallback
   Future<User?> getUserData() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final userJson = prefs.getString(_userKey);
+      final sessionUser = _supabase.auth.currentUser;
+      if (sessionUser == null) return null;
       
-      if (userJson != null && userJson.isNotEmpty) {
-        return User.fromJson(jsonDecode(userJson));
+      final profile = await _supabase
+          .from('profiles')
+          .select()
+          .eq('id', sessionUser.id)
+          .maybeSingle();
+          
+      if (profile == null) {
+        // Fallback to local session metadata if trigger is still propagating
+        return User(
+          id: sessionUser.id,
+          email: sessionUser.email ?? '',
+          firstName: sessionUser.userMetadata?['first_name'] ?? '',
+          lastName: sessionUser.userMetadata?['last_name'] ?? '',
+          phone: sessionUser.userMetadata?['phone'] ?? '',
+          profileImage: null,
+          address: null,
+          city: null,
+          country: null,
+          zipCode: null,
+          createdAt: DateTime.tryParse(sessionUser.createdAt),
+        );
       }
-      return null;
+      
+      return User.fromJson(profile);
     } catch (e) {
       return null;
     }
@@ -191,25 +121,16 @@ class AuthService {
   
   // Check if user is logged in
   Future<bool> isLoggedIn() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString(_tokenKey);
-      return token != null && token.isNotEmpty;
-    } catch (e) {
-      return false;
-    }
+    return _supabase.auth.currentSession != null;
   }
   
   // Logout user
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_tokenKey);
-    await prefs.remove(_userKey);
+    await _supabase.auth.signOut();
   }
   
   // Get auth token
   Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_tokenKey);
+    return _supabase.auth.currentSession?.accessToken;
   }
 }

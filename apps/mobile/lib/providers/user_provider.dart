@@ -29,7 +29,7 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<User?> getUserById(int id) async {
+  Future<User?> getUserById(String id) async {
     return await _repository.getUserById(id);
   }
 

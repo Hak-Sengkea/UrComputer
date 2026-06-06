@@ -38,6 +38,7 @@ dependencies:
   shared_preferences: ^2.5.3
   cached_network_image: ^3.4.1
   data: ^0.15.2
+  supabase_flutter: ^2.8.0
 
 dev_dependencies:
   flutter_test:

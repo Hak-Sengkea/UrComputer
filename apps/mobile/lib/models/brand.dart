@@ -1,5 +1,5 @@
 class Brand {
-  final int id;
+  final String id;
   final String name;
   final String? logo;
   final String? description;
@@ -8,7 +8,7 @@ class Brand {
 
   factory Brand.fromJson(Map<String, dynamic> json) {
     return Brand(
-      id: json['id'],
+      id: json['id'].toString(),
       name: json['name'],
       logo: json['logo'],
       description: json['description'],
