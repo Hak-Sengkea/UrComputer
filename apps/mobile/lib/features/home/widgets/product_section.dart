@@ -92,7 +92,7 @@ class ProductSection extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: AppColors.onSurface.withOpacity(0.8),
+                      color: AppColors.onSurface.withValues(alpha: 0.8),
                       height: 1.35,
                     ),
                   ),
