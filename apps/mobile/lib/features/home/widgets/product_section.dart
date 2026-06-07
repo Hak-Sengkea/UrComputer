@@ -48,30 +48,12 @@ class ProductSection extends StatelessWidget {
               final product = products[index];
               return Padding(
                 padding: EdgeInsets.only(right: AppSizes.space16),
-                child: ProductCard(
-                  product: product,
-                ),
+                child: ProductCard(product: product, width: 280),
               );
             },
           ),
         ),
       ],
     );
-  }
-
- 
-  Widget _buildBackground(Product product) {
-    final image = product.image?.trim();
-
-    if (image != null && image.isNotEmpty) {
-      return Image.network(
-        image,
-        fit: BoxFit.cover,
-        alignment: Alignment.center,
-        errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
-      );
-    }
-
-    return const SizedBox.shrink();
   }
 }

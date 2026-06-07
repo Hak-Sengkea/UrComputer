@@ -97,7 +97,8 @@ class _ProductGalleryState extends State<ProductGallery> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final images = _galleryImages;
-    final selectedImage = images.isEmpty ? null : images[_selectedIndex];
+    final selectedIndex = _selectedIndex < images.length ? _selectedIndex : 0;
+    final selectedImage = images.isEmpty ? null : images[selectedIndex];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +139,7 @@ class _ProductGalleryState extends State<ProductGallery> {
         if (images.isNotEmpty) ...[
           const SizedBox(height: AppSizes.space12),
           Text(
-            'View Angle',
+            'Product Images',
             style: theme.textTheme.titleSmall?.copyWith(
               color: theme.colorScheme.onSurface,
               fontWeight: FontWeight.w700,
@@ -154,7 +155,7 @@ class _ProductGalleryState extends State<ProductGallery> {
                   const SizedBox(width: AppSizes.space8),
               itemBuilder: (context, index) {
                 final image = images[index];
-                final isSelected = index == _selectedIndex;
+                final isSelected = index == selectedIndex;
 
                 return _AngleThumbnail(
                   image: image,
@@ -170,25 +171,29 @@ class _ProductGalleryState extends State<ProductGallery> {
   }
 
   List<_GalleryImage> get _galleryImages {
+    final galleryImages = <_GalleryImage>[];
+    final addedUrls = <String>{};
+    final mainImage = widget.product.image?.trim();
+
+    if (mainImage != null && mainImage.isNotEmpty) {
+      galleryImages.add(_GalleryImage(imageUrl: mainImage, viewAngle: 'Main'));
+      addedUrls.add(mainImage);
+    }
+
     final productImages = [...?widget.product.viewAngle]
       ..sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
 
-    if (productImages.isNotEmpty) {
-      return productImages
-          .where((image) => image.imageUrl.trim().isNotEmpty)
-          .map(
-            (image) => _GalleryImage(
-              imageUrl: image.imageUrl,
-              viewAngle: image.viewAngle,
-            ),
-          )
-          .toList();
+    for (final image in productImages) {
+      final imageUrl = image.imageUrl.trim();
+      if (imageUrl.isEmpty || addedUrls.contains(imageUrl)) continue;
+
+      galleryImages.add(
+        _GalleryImage(imageUrl: imageUrl, viewAngle: image.viewAngle),
+      );
+      addedUrls.add(imageUrl);
     }
 
-    final fallbackImage = widget.product.image?.trim();
-    if (fallbackImage == null || fallbackImage.isEmpty) return [];
-
-    return [_GalleryImage(imageUrl: fallbackImage, viewAngle: 'Main')];
+    return galleryImages;
   }
 }
 
