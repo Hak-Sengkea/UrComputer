@@ -1,3 +1,4 @@
+import 'package:mobile/models/product_image.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Product {
@@ -9,6 +10,7 @@ class Product {
   final String categoryId;
   final String brandId;
   final String? image;
+  final List<ProductImage>? viewAngle;
   final int? stock;
   final double? rating;
   final int? reviews;
@@ -21,6 +23,7 @@ class Product {
     this.discount,
     required this.categoryId,
     required this.brandId,
+    required this.viewAngle,
     this.image,
     this.stock,
     this.rating,
@@ -37,21 +40,37 @@ class Product {
         resolvedImage = rawImage;
       } else {
         // Resolve relative paths (e.g. 'acer_headphones.jpg') dynamically using the active Supabase bucket
-        resolvedImage = Supabase.instance.client.storage.from('products').getPublicUrl(rawImage);
+        resolvedImage = Supabase.instance.client.storage
+            .from('products')
+            .getPublicUrl(rawImage);
       }
     }
+
+    final productImagesJson = json['product_images'] ?? json['view_angle'];
+    final productImages = productImagesJson != null
+        ? (productImagesJson as List)
+              .map((img) => ProductImage.fromJson(img))
+              .toList()
+        : null;
+
+    productImages?.sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
 
     return Product(
       id: json['id'].toString(),
       name: json['name'],
       description: json['description'],
       price: (json['price'] as num).toDouble(),
-      discount: json['discount'] != null ? (json['discount'] as num).toDouble() : null,
+      discount: json['discount'] != null
+          ? (json['discount'] as num).toDouble()
+          : null,
       categoryId: (json['category_id'] ?? json['categoryId']).toString(),
       brandId: (json['brand_id'] ?? json['brandId']).toString(),
       image: resolvedImage,
+      viewAngle: productImages,
       stock: json['stock'],
-      rating: json['rating'] != null ? (json['rating'] as num).toDouble() : null,
+      rating: json['rating'] != null
+          ? (json['rating'] as num).toDouble()
+          : null,
       reviews: json['reviews'] ?? json['reviews_count'],
     );
   }
