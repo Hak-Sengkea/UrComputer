@@ -5,8 +5,10 @@ import 'package:mobile/features/cart/cart_screen.dart';
 import 'package:mobile/features/home/home_screen.dart';
 import 'package:mobile/features/landing/landing_screen.dart';
 import 'package:mobile/features/products/builder_screen.dart';
+import 'package:mobile/features/products/product_detail.dart';
 import 'package:mobile/features/settings/setting_screen.dart';
 import 'package:mobile/features/support/support_screen.dart';
+import 'package:mobile/features/favorites/favorites_screen.dart';
 import 'package:mobile/features/testing/test_load_data.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/widgets/main_shell.dart';
@@ -48,6 +50,7 @@ GoRouter createRouter(AuthProvider authProvider) {
         name: 'register',
         builder: (context, state) => const RegisterScreen(),
       ),
+     
       ShellRoute(
         builder: (context, state, child) {
           return MainShell(child: child);
@@ -78,6 +81,19 @@ GoRouter createRouter(AuthProvider authProvider) {
             name: 'settings',
             builder: (context, state) => const SettingScreen(),
           ),
+          GoRoute(
+            path: '/favorites',
+            name: 'favorites',
+            builder: (context, state) => const FavoritesScreen(),
+          ),
+          GoRoute(
+            path: '/product/:id',
+            name: 'product_detail',
+            builder: (context, state) {
+              final productId = state.pathParameters['id']!;
+              return ProductDetail(productId: productId);
+            },
+          ), 
           GoRoute(
             path: '/testing',
             name: 'testing',

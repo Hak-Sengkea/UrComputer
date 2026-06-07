@@ -7,7 +7,9 @@ class ProductRepository {
   Future<List<Product>> getAllProducts() async {
     final response = await _supabase
         .from('products')
-        .select()
+        .select('''*,
+          product_images(*)
+        ''')
         .order('id', ascending: true);
     return (response as List).map((json) => Product.fromJson(json)).toList();
   }
@@ -15,7 +17,9 @@ class ProductRepository {
   Future<List<Product>> getProductsByCategory(String categoryId) async {
     final response = await _supabase
         .from('products')
-        .select()
+        .select('''*,
+          product_images(*)
+        ''')
         .eq('category_id', categoryId);
     return (response as List).map((json) => Product.fromJson(json)).toList();
   }
@@ -44,7 +48,9 @@ class ProductRepository {
     try {
       final response = await _supabase
           .from('products')
-          .select()
+          .select('''*,
+          product_images(*)
+        ''')
           .eq('id', id)
           .maybeSingle();
       if (response == null) return null;
@@ -63,10 +69,7 @@ class ProductRepository {
   }
 
   Future<List<Product>> getInStockProducts() async {
-    final response = await _supabase
-        .from('products')
-        .select()
-        .gt('stock', 0);
+    final response = await _supabase.from('products').select().gt('stock', 0);
     return (response as List).map((json) => Product.fromJson(json)).toList();
   }
 }

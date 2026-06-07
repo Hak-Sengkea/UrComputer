@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_text_style.dart';
+import 'theme_extensions.dart';
 
 class AppTheme {
   static const Color primary = Color(0xFF00D1FF);
-  
-  // ✅ Define the actual colors (not null)
   static const Color neonCyan = Color(0xFF00E5FF);
   static const Color neonPurple = Color(0xFFB44CFF);
   static const Color neonPink = Color(0xFFFF4D8C);
@@ -13,13 +12,57 @@ class AppTheme {
   static const Color cardBg = Color(0xFF1A1A1A);
   static const Color textSecondary = Color(0xFF888888);
 
+  static final _sharedSizes = const AppSizesExtension(
+    space4: 4.0,
+    space8: 8.0,
+    space12: 12.0,
+    space16: 16.0,
+    space24: 24.0,
+    space32: 32.0,
+    space48: 48.0,
+    radiusSmall: 8.0,
+    radiusMedium: 12.0,
+    radiusLarge: 16.0,
+    radiusPill: 100.0,
+    edgeMarginMobile: 16.0,
+    edgeMarginDesktop: 32.0,
+    appBarHeight: 64.0,
+    bottomNavHeight: 80.0,
+  );
+
+  static final _sharedColors = const AppColorsExtension(
+    neonCyan: neonCyan,
+    neonPurple: neonPurple,
+    neonPink: neonPink,
+    darkBg: darkBg,
+    cardBg: cardBg,
+    textSecondary: textSecondary,
+    success: AppColors.success,
+    warning: AppColors.warning,
+    primaryGradient: LinearGradient(
+      colors: [neonCyan, neonPurple],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    backgroundGradient: LinearGradient(
+      colors: [AppColors.surface, Color(0xFF10151C), AppColors.surfaceVariant],
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+    ),
+  );
+
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
+      brightness: Brightness.light,
       colorScheme: ColorScheme.fromSeed(
         seedColor: primary,
         brightness: Brightness.light,
       ),
+      extensions: <ThemeExtension<dynamic>>[
+        _sharedColors,
+        _sharedSizes,
+      ],
       textTheme: const TextTheme(
         displayLarge: AppTextStyle.displayLarge,
         displayMedium: AppTextStyle.displayMedium,
@@ -56,21 +99,14 @@ class AppTheme {
         outline: AppColors.outline,
         error: AppColors.error,
       ),
+      extensions: <ThemeExtension<dynamic>>[
+        _sharedColors,
+        _sharedSizes,
+      ],
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.surface,
         foregroundColor: AppColors.onSurface,
         elevation: 0,
-      ),
-      navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: AppColors.surface,
-        indicatorColor: AppColors.primary.withValues(alpha: 0.16),
-        labelTextStyle: WidgetStateProperty.all(AppTextStyle.labelSmall),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.onPrimary,
-        ),
       ),
       textTheme: const TextTheme(
         displayLarge: AppTextStyle.displayLarge,
@@ -91,19 +127,4 @@ class AppTheme {
       ),
     );
   }
-}
-
-// ✅ Add this class for gradients
-class AppGradients {
-  static const LinearGradient primaryButton = LinearGradient(
-    colors: [AppColors.primary, AppTheme.neonPurple],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-  
-  static const LinearGradient background = LinearGradient(
-    colors: [AppColors.surface, Color(0xFF10151C), AppColors.surfaceVariant],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
 }

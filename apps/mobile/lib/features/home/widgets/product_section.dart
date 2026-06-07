@@ -5,6 +5,7 @@ import 'package:mobile/models/product.dart';
 import 'package:mobile/theme/app_colors.dart';
 import 'package:mobile/providers/cart_provider.dart';
 import 'package:mobile/providers/auth_provider.dart';
+import 'package:mobile/widgets/shared/product_card.dart';
 
 class ProductSection extends StatelessWidget {
   final String title;
@@ -50,7 +51,9 @@ class ProductSection extends StatelessWidget {
               final product = products[index];
               return Padding(
                 padding: EdgeInsets.only(right: AppSizes.space16),
-                child: _buildProductCard(context, product, theme),
+                child: ProductCard(
+                  product: product,
+                ),
               );
             },
           ),

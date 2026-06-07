@@ -89,7 +89,7 @@ class _FeaturedCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceVariant,
         borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
-        border: Border.all(color: AppColors.outline.withOpacity(0.12)),
+        border: Border.all(color: AppColors.outline.withValues(alpha: 0.12)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +108,7 @@ class _FeaturedCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
                     height: 105,
-                    color: AppColors.outline.withOpacity(0.1),
+                    color: AppColors.outline.withValues(alpha: 0.1),
                     child: const Icon(Icons.laptop, color: Colors.grey),
                   ),
                 ),
@@ -173,7 +173,7 @@ class _FeaturedCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: AppColors.onSurface.withOpacity(0.6),
+                          color: AppColors.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],

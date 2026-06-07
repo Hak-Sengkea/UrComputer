@@ -57,7 +57,7 @@ class _CategoryTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceVariant,
         borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-        border: Border.all(color: AppColors.outline.withOpacity(0.2)),
+        border: Border.all(color: AppColors.outline.withValues(alpha: 0.2)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
