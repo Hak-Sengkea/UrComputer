@@ -8,6 +8,7 @@ import 'package:mobile/features/products/builder_screen.dart';
 import 'package:mobile/features/products/product_detail.dart';
 import 'package:mobile/features/settings/setting_screen.dart';
 import 'package:mobile/features/support/support_screen.dart';
+import 'package:mobile/features/favorites/favorites_screen.dart';
 import 'package:mobile/features/testing/test_load_data.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/widgets/main_shell.dart';
@@ -19,14 +20,23 @@ GoRouter createRouter(AuthProvider authProvider) {
     redirect: (context, state) {
       final location = state.matchedLocation;
       final isLoggedIn = authProvider.isLoggedIn;
+      
+      // Public routes (no login required)
       final isPublicRoute = location == '/' ||
           location == '/login' ||
           location == '/register';
 
-      if (isLoggedIn && (location == '/' || location == '/login' || location == '/register')) {
+      // If logged in and trying to access landing page, go to home
+      if (isLoggedIn && location == '/') {
+        return '/home';
+      }
+      
+      // If logged in and trying to access login/register, go to home
+      if (isLoggedIn && (location == '/login' || location == '/register')) {
         return '/home';
       }
 
+      // If not logged in and trying to access protected routes, go to login
       if (!isLoggedIn && !isPublicRoute) {
         return '/login';
       }
@@ -34,6 +44,7 @@ GoRouter createRouter(AuthProvider authProvider) {
       return null;
     },
     routes: [
+      // Public routes (no bottom navigation)
       GoRoute(
         path: '/',
         name: 'landing',
@@ -49,7 +60,8 @@ GoRouter createRouter(AuthProvider authProvider) {
         name: 'register',
         builder: (context, state) => const RegisterScreen(),
       ),
-     
+      
+      // Protected routes (with bottom navigation)
       ShellRoute(
         builder: (context, state, child) {
           return MainShell(child: child);
@@ -79,6 +91,11 @@ GoRouter createRouter(AuthProvider authProvider) {
             path: '/settings',
             name: 'settings',
             builder: (context, state) => const SettingScreen(),
+          ),
+          GoRoute(
+            path: '/favorites',
+            name: 'favorites',
+            builder: (context, state) => const FavoritesScreen(),
           ),
           GoRoute(
             path: '/product/:id',

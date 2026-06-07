@@ -3,6 +3,8 @@ import '../models/user.dart';
 
 class AuthService {
   final SupabaseClient _supabase = Supabase.instance.client;
+
+  Stream<AuthState> get authStateChanges => _supabase.auth.onAuthStateChange;
   
   // Login method
   Future<bool> login(String email, String password) async {
@@ -36,7 +38,6 @@ class AuthService {
     }
   }
   
-  // Register method
   Future<bool> register(String email, String password, String confirmPassword, {
     String? firstName,
     String? lastName,
@@ -52,7 +53,6 @@ class AuthService {
         throw Exception('Please enter a valid email address');
       }
       
-      // Validate password
       if (password.isEmpty) {
         throw Exception('Password is required');
       }
@@ -61,7 +61,6 @@ class AuthService {
         throw Exception('Password must be at least 6 characters');
       }
       
-      // Validate password confirmation
       if (password != confirmPassword) {
         throw Exception('Passwords do not match');
       }
@@ -109,7 +108,7 @@ class AuthService {
           city: null,
           country: null,
           zipCode: null,
-          createdAt: DateTime.tryParse(sessionUser.createdAt),
+          createdAt: DateTime.tryParse(sessionUser.createdAt ?? ''),
         );
       }
       
@@ -119,17 +118,14 @@ class AuthService {
     }
   }
   
-  // Check if user is logged in
   Future<bool> isLoggedIn() async {
     return _supabase.auth.currentSession != null;
   }
   
-  // Logout user
   Future<void> logout() async {
     await _supabase.auth.signOut();
   }
   
-  // Get auth token
   Future<String?> getToken() async {
     return _supabase.auth.currentSession?.accessToken;
   }

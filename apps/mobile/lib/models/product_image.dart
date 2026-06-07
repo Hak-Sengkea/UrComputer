@@ -29,4 +29,13 @@ class ProductImage {
       displayOrder: json['display_order'] ?? 0,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'image_url': imageUrl,
+      'view_angle': viewAngle,
+      'display_order': displayOrder,
+    };
+  }
 }

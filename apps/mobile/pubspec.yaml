@@ -39,6 +39,7 @@ dependencies:
   cached_network_image: ^3.4.1
   data: ^0.15.2
   supabase_flutter: ^2.8.0
+  uuid: ^4.5.3
   flutter_dotenv: ^6.0.1
 
 dev_dependencies:

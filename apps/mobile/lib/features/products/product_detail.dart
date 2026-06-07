@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/const/app_sizes.dart';
 import 'package:mobile/models/product.dart';
 import 'package:mobile/providers/product_provider.dart';
+import 'package:mobile/providers/favorites_provider.dart';
 import 'package:provider/provider.dart';
 
 class ProductDetail extends StatefulWidget {
@@ -27,35 +28,64 @@ class _ProductDetailState extends State<ProductDetail> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final favoritesProvider = context.watch<FavoritesProvider>();
 
-    return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
-      appBar: AppBar(title: const Text('Product Detail')),
-      body: FutureBuilder<Product?>(
-        future: _productFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    return FutureBuilder<Product?>(
+      future: _productFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            backgroundColor: theme.colorScheme.surface,
+            appBar: AppBar(title: const Text('Product Detail')),
+            body: const Center(child: CircularProgressIndicator()),
+          );
+        }
 
-          if (snapshot.hasError) {
-            return _ProductDetailStateView(
+        if (snapshot.hasError) {
+          return Scaffold(
+            backgroundColor: theme.colorScheme.surface,
+            appBar: AppBar(title: const Text('Product Detail')),
+            body: _ProductDetailStateView(
               icon: Icons.error_outline,
               title: 'Something went wrong',
               message: snapshot.error.toString(),
-            );
-          }
+            ),
+          );
+        }
 
-          final product = snapshot.data;
-          if (product == null) {
-            return const _ProductDetailStateView(
+        final product = snapshot.data;
+        if (product == null) {
+          return Scaffold(
+            backgroundColor: theme.colorScheme.surface,
+            appBar: AppBar(title: const Text('Product Detail')),
+            body: const _ProductDetailStateView(
               icon: Icons.inventory_2_outlined,
               title: 'Product not found',
               message: 'This product may no longer be available.',
-            );
-          }
+            ),
+          );
+        }
 
-          return SingleChildScrollView(
+        final isFav = favoritesProvider.isFavorite(product.id);
+
+        return Scaffold(
+          backgroundColor: theme.colorScheme.surface,
+          appBar: AppBar(
+            title: const Text('Product Detail'),
+            actions: [
+              IconButton(
+                tooltip: isFav ? 'Remove from Favorites' : 'Add to Favorites',
+                icon: Icon(
+                  isFav ? Icons.favorite : Icons.favorite_border,
+                  color: isFav ? Colors.redAccent : null,
+                ),
+                onPressed: () {
+                  favoritesProvider.toggleFavorite(product);
+                },
+              ),
+            ],
+          ),
+          body: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(
               AppSizes.edgeMarginMobile,
               AppSizes.space16,
@@ -74,9 +104,9 @@ class _ProductDetailState extends State<ProductDetail> {
                 PerformanceSection(product: product),
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

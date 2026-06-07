@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'widgets/gradient_background.dart';
@@ -21,23 +22,25 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
 
   @override
+  void initState() {
+    super.initState();
+    if (kDebugMode) {
+      // _emailController.text = 'demo@example.com';
+      // _passwordController.text = 'password123';
+    }
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  // Optional: Pre-fill for testing (remove in production)
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Future<void> _handleLogin() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     
-    // Validation
     if (email.isEmpty) {
       _showSnackBar('Please enter your email');
       return;
@@ -58,15 +61,13 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
     
-    // Get auth provider and attempt login
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final success = await authProvider.login(email, password);
     
     if (success && mounted) {
-      // Navigate to home on success
+      // ✅ FIXED: Navigate to '/home' not '/'
       context.go('/home');
     } else if (mounted) {
-      // Show error message
       _showSnackBar(authProvider.errorMessage ?? 'Login failed. Please try again.');
     }
   }
@@ -142,7 +143,6 @@ class _LoginScreenState extends State<LoginScreen> {
         Text(
           'Please login to continue',
           style: AppTextStyle.bodyMedium.copyWith(
-            // ignore: deprecated_member_use
             color: AppTheme.textSecondary.withOpacity(0.7),
           ),
         ),
@@ -196,10 +196,8 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              // ignore: deprecated_member_use
               color: Colors.red.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
-              // ignore: deprecated_member_use
               border: Border.all(color: Colors.red.withOpacity(0.3)),
             ),
             child: Row(
@@ -245,7 +243,6 @@ class _LoginScreenState extends State<LoginScreen> {
             color: AppTheme.cardBg,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              // ignore: deprecated_member_use
               color: Colors.white.withOpacity(0.1),
               width: 1,
             ),
@@ -255,14 +252,14 @@ class _LoginScreenState extends State<LoginScreen> {
             obscureText: obscureText,
             keyboardType: keyboardType,
             style: const TextStyle(
-              color: Colors.white, 
+              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w400,
             ),
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(
-                color: Colors.grey[500],  
+                color: Colors.grey[500],
                 fontSize: 14,
               ),
               prefixIcon: Icon(icon, color: AppTheme.textSecondary, size: 20),
@@ -284,7 +281,6 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         Row(
           children: [
-            // ignore: deprecated_member_use
             Expanded(child: Divider(color: Colors.white.withOpacity(0.1))),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -296,7 +292,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            // ignore: deprecated_member_use
             Expanded(child: Divider(color: Colors.white.withOpacity(0.1))),
           ],
         ),
@@ -385,7 +380,6 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Text(
         text,
         style: AppTextStyle.labelSmall.copyWith(
-          // ignore: deprecated_member_use
           color: AppTheme.textSecondary.withOpacity(0.7),
         ),
       ),
