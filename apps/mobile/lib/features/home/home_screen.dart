@@ -7,6 +7,7 @@ import 'package:mobile/features/home/widgets/product_section.dart';
 import 'package:mobile/models/product.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/providers/brand_provider.dart';
+import 'package:mobile/providers/cart_provider.dart';
 import 'package:mobile/providers/product_provider.dart';
 import 'package:mobile/theme/app_colors.dart';
 import 'package:mobile/theme/app_text_style.dart';
@@ -19,6 +20,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final cartProvider = context.watch<CartProvider>();
     final productProvider = context.watch<ProductProvider>();
     final brandProvider = context.watch<BrandProvider>();
     final authProvider = context.read<AuthProvider>();

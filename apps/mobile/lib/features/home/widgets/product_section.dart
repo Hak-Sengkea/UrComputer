@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:mobile/const/app_sizes.dart';
 import 'package:mobile/models/product.dart';
 import 'package:mobile/theme/app_colors.dart';
+import 'package:mobile/providers/cart_provider.dart';
+import 'package:mobile/providers/auth_provider.dart';
 
 class ProductSection extends StatelessWidget {
   final String title;
@@ -70,8 +73,28 @@ class ProductSection extends StatelessWidget {
           children: [
             Container(color: AppColors.surfaceVariant),
             _buildBackground(product),
+            
+            // 1. Bottom Dark Gradient Scrim to ensure text legibility over images
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black.withValues(alpha: 0.85),
+                      Colors.black.withValues(alpha: 0.2),
+                      Colors.transparent,
+                    ],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    stops: const [0.0, 0.55, 1.0],
+                  ),
+                ),
+              ),
+            ),
+            
+            // 2. Product Information Overlay
             Padding(
-              padding: EdgeInsets.all(AppSizes.space16),
+              padding: const EdgeInsets.all(AppSizes.space16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -86,7 +109,7 @@ class ProductSection extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: AppSizes.space8),
+                  const SizedBox(height: AppSizes.space8),
                   Text(
                     product.description ?? 'Premium Product',
                     maxLines: 2,
@@ -96,7 +119,7 @@ class ProductSection extends StatelessWidget {
                       height: 1.35,
                     ),
                   ),
-                  SizedBox(height: AppSizes.space12),
+                  const SizedBox(height: AppSizes.space12),
                   Text(
                     '\$${product.price}',
                     style: theme.textTheme.titleSmall?.copyWith(
@@ -105,6 +128,50 @@ class ProductSection extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+            ),
+            
+            // 3. Top-Right "Add to Cart" Button
+            Positioned(
+              top: AppSizes.space12,
+              right: AppSizes.space12,
+              child: ClipOval(
+                child: Material(
+                  color: Colors.black.withValues(alpha: 0.5),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.add_shopping_cart,
+                      color: AppColors.primary,
+                      size: 20,
+                    ),
+                    onPressed: () async {
+                      final auth = context.read<AuthProvider>();
+                      
+                      if (!auth.isLoggedIn) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please log in to add items to cart'),
+                            backgroundColor: Colors.redAccent,
+                          ),
+                        );
+                        return;
+                      }
+                      
+                      final cart = context.read<CartProvider>();
+                      await cart.addToCart(product, 1);
+                      
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('${product.name} added to cart!'),
+                            duration: const Duration(seconds: 2),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
               ),
             ),
           ],

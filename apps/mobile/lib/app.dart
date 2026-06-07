@@ -5,6 +5,8 @@ import 'package:mobile/providers/brand_provider.dart';
 import 'package:mobile/providers/category_provider.dart';
 import 'package:mobile/providers/product_provider.dart';
 import 'package:mobile/providers/user_provider.dart';
+import 'package:mobile/providers/cart_provider.dart';
+import 'package:mobile/data/repository/cart_repository.dart';
 import 'package:provider/provider.dart';
 
 import 'router/app_router.dart';
@@ -27,6 +29,9 @@ class UrComputerApp extends StatelessWidget {
           create: (_) => CategoryProvider()..loadAllCategories(),
         ),
         ChangeNotifierProvider(create: (_) => BrandProvider()..loadAllBrands()),
+        ChangeNotifierProvider(
+          create: (_) => CartProvider(cartRepository: CartRepository()),
+        ),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
