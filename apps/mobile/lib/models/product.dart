@@ -85,6 +85,7 @@ class Product {
       'category_id': categoryId,
       'brand_id': brandId,
       'image': image,
+      'view_angle': viewAngle?.map((e) => e.toJson()).toList(),
       'stock': stock,
       'rating': rating,
       'reviews_count': reviews,
@@ -95,4 +96,6 @@ class Product {
     if (discount == null || discount == 0) return price;
     return price - (price * discount! / 100);
   }
+
+  get brandName => null;
 }

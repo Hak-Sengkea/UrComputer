@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/models/product.dart';
-import 'package:mobile/theme/app_colors.dart';
-import 'package:mobile/const/app_sizes.dart';
+import 'package:mobile/theme/theme_context.dart';
+import 'package:mobile/providers/favorites_provider.dart';
+import 'package:provider/provider.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -18,10 +19,11 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final favoritesProvider = context.watch<FavoritesProvider>();
+    final isFav = favoritesProvider.isFavorite(product.id);
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
+      borderRadius: BorderRadius.circular(context.sizes.radiusLarge),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -36,72 +38,94 @@ class ProductCard extends StatelessWidget {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Container(color: AppColors.surfaceVariant),
+                Container(
+                  color: context.customColors.cardBg,
+                ),
 
                 _buildBackground(),
 
-                if (!compact)
-                  Container(
+                // 1. Dark Gradient Scrim to ensure text legibility
+                Positioned.fill(
+                  child: DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
                         colors: [
+                          Colors.black.withValues(alpha: 0.85),
+                          Colors.black.withValues(alpha: 0.15),
                           Colors.transparent,
-                          AppColors.surface.withValues(alpha: 0.88),
                         ],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        stops: const [0.0, 0.6, 1.0],
                       ),
                     ),
                   ),
+                ),
 
+                // 2. Product Text Content
                 Padding(
-                  padding: EdgeInsets.all(
-                    compact ? AppSizes.space8 : AppSizes.space16,
-                  ),
+                  padding: EdgeInsets.all(context.sizes.space16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
                         product.name,
-                        style:
-                            (compact
-                                    ? theme.textTheme.bodyMedium
-                                    : theme.textTheme.titleMedium)
-                                ?.copyWith(
-                                  color: AppColors.onSurface,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                        style: context.textTheme.titleMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
 
-                      SizedBox(
-                        height: compact ? AppSizes.space4 : AppSizes.space8,
-                      ),
-
-                      if (!compact) ...[
-                        Text(
-                          product.description ?? 'Premium Product',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-
-                        const SizedBox(height: AppSizes.space12),
-                      ],
+                      SizedBox(height: context.sizes.space8),
 
                       Text(
-                        '\$${product.price}',
-                        style:
-                            (compact
-                                    ? theme.textTheme.bodySmall
-                                    : theme.textTheme.titleSmall)
-                                ?.copyWith(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        product.description ?? 'Premium Product',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: Colors.white70,
+                        ),
+                      ),
+
+                      SizedBox(height: context.sizes.space12),
+
+                      Text(
+                        '\$${product.price.toStringAsFixed(2)}',
+                        style: context.textTheme.titleSmall?.copyWith(
+                          color: context.colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
+                  ),
+                ),
+
+                // 3. Top-Right "Favorite" Heart Overlay Button
+                Positioned(
+                  top: context.sizes.space12,
+                  right: context.sizes.space12,
+                  child: ClipOval(
+                    child: Material(
+                      color: Colors.black.withValues(alpha: 0.45),
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(
+                          minWidth: 36,
+                          minHeight: 36,
+                        ),
+                        icon: Icon(
+                          isFav ? Icons.favorite : Icons.favorite_border,
+                          color: isFav ? Colors.redAccent : Colors.white,
+                          size: 18,
+                        ),
+                        onPressed: () {
+                          favoritesProvider.toggleFavorite(product);
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ],

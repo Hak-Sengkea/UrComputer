@@ -10,6 +10,7 @@ import 'package:mobile/features/products/product_detail.dart';
 import 'package:mobile/features/products/search_screen.dart';
 import 'package:mobile/features/settings/setting_screen.dart';
 import 'package:mobile/features/support/support_screen.dart';
+import 'package:mobile/features/favorites/favorites_screen.dart';
 import 'package:mobile/features/testing/test_load_data.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/widgets/main_shell.dart';
@@ -33,7 +34,13 @@ GoRouter createRouter(AuthProvider authProvider) {
               location == '/register')) {
         return '/home';
       }
+      
+      // If logged in and trying to access login/register, go to home
+      if (isLoggedIn && (location == '/login' || location == '/register')) {
+        return '/home';
+      }
 
+      // If not logged in and trying to access protected routes, go to login
       if (!isLoggedIn && !isPublicRoute) {
         return '/login';
       }
@@ -41,6 +48,7 @@ GoRouter createRouter(AuthProvider authProvider) {
       return null;
     },
     routes: [
+      // Public routes (no bottom navigation)
       GoRoute(
         path: '/',
         name: 'landing',
@@ -92,6 +100,11 @@ GoRouter createRouter(AuthProvider authProvider) {
             path: '/settings',
             name: 'settings',
             builder: (context, state) => const SettingScreen(),
+          ),
+          GoRoute(
+            path: '/favorites',
+            name: 'favorites',
+            builder: (context, state) => const FavoritesScreen(),
           ),
           GoRoute(
             path: '/product/:id',

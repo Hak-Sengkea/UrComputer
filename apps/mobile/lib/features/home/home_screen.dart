@@ -9,6 +9,7 @@ import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/providers/brand_provider.dart';
 import 'package:mobile/providers/category_provider.dart';
 import 'package:mobile/providers/product_provider.dart';
+import 'package:mobile/providers/favorites_provider.dart';
 import 'package:mobile/theme/app_colors.dart';
 import 'package:mobile/theme/app_text_style.dart';
 import 'package:mobile/widgets/heading.dart';
@@ -22,6 +23,7 @@ class HomeScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final productProvider = context.watch<ProductProvider>();
     final brandProvider = context.watch<BrandProvider>();
+    final favoritesProvider = context.watch<FavoritesProvider>();
     final categoryProvider = context.watch<CategoryProvider>();
     final authProvider = context.read<AuthProvider>();
     final List<Product> products = productProvider.products;
@@ -42,6 +44,24 @@ class HomeScreen extends StatelessWidget {
         onMenuPressed: () {},
         actions: [
           IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+          Badge(
+            label: Text('${favoritesProvider.favorites.length}'),
+            isLabelVisible: favoritesProvider.favorites.isNotEmpty,
+            child: IconButton(
+              tooltip: 'Favorites',
+              icon: Icon(
+                favoritesProvider.favorites.isNotEmpty
+                    ? Icons.favorite
+                    : Icons.favorite_border,
+                color: favoritesProvider.favorites.isNotEmpty
+                    ? Colors.redAccent
+                    : null,
+              ),
+              onPressed: () {
+                context.push('/favorites');
+              },
+            ),
+          ),
           IconButton(
             tooltip: 'Logout',
             icon: const Icon(Icons.logout),

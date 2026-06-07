@@ -14,14 +14,26 @@ class AuthProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get isLoggedIn => _currentUser != null;
   
-  // Get user's full name
   String get userFullName => _currentUser?.fullName ?? '';
-  
-  // Get user's email
   String get userEmail => _currentUser?.email ?? '';
   
   AuthProvider() {
     _loadUser();
+    _listenToAuthChanges();  // ✅ ADD THIS - Listen to Supabase auth state
+  }
+  
+  // ✅ ADD THIS METHOD - Listen to auth state changes from Supabase
+  void _listenToAuthChanges() {
+    _authService.authStateChanges.listen((event) {
+      // When user logs out or session changes
+      if (event.session == null) {
+        _currentUser = null;
+        notifyListeners();
+      } else {
+        // Refresh user data when session changes
+        _loadUser();
+      }
+    });
   }
   
   Future<void> _loadUser() async {
