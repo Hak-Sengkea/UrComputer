@@ -3,6 +3,9 @@ import 'package:mobile/const/app_sizes.dart';
 import 'package:mobile/models/product.dart';
 import 'package:mobile/providers/product_provider.dart';
 import 'package:mobile/providers/favorites_provider.dart';
+import 'package:mobile/providers/auth_provider.dart';
+import 'package:mobile/providers/cart_provider.dart';
+import 'package:mobile/features/cart/widgets/quantity_button.dart';
 import 'package:provider/provider.dart';
 
 class ProductDetail extends StatefulWidget {
@@ -16,6 +19,7 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   late final Future<Product?> _productFuture;
+  int _quantity = 1;
 
   @override
   void initState() {
@@ -97,7 +101,52 @@ class _ProductDetailState extends State<ProductDetail> {
               children: [
                 ProductGallery(product: product),
                 const SizedBox(height: AppSizes.space16),
-                ProductSummaryCard(product: product),
+                ProductSummaryCard(
+                  product: product,
+                  quantity: _quantity,
+                  onIncrement: () {
+                    setState(() {
+                      _quantity++;
+                    });
+                  },
+                  onDecrement: () {
+                    if (_quantity > 1) {
+                      setState(() {
+                        _quantity--;
+                      });
+                    }
+                  },
+                  onAddToCart: () async {
+                    final auth = context.read<AuthProvider>();
+                    if (!auth.isLoggedIn) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please log in to add items to cart'),
+                          backgroundColor: Colors.redAccent,
+                        ),
+                      );
+                      return;
+                    }
+
+                    final cart = context.read<CartProvider>();
+                    if (cart.isLoading) return;
+
+                    if (cart.cart == null) {
+                      await cart.initializeCart(auth.currentUser!.id);
+                    }
+                    await cart.addToCart(product, _quantity);
+
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${product.name} (x$_quantity) added to cart!'),
+                          duration: const Duration(seconds: 2),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  },
+                ),
                 const SizedBox(height: AppSizes.space16),
                 QuickSpecs(product: product),
                 const SizedBox(height: AppSizes.space16),
@@ -321,8 +370,19 @@ class _GalleryImage {
 
 class ProductSummaryCard extends StatelessWidget {
   final Product product;
+  final int quantity;
+  final VoidCallback onIncrement;
+  final VoidCallback onDecrement;
+  final VoidCallback onAddToCart;
 
-  const ProductSummaryCard({super.key, required this.product});
+  const ProductSummaryCard({
+    super.key,
+    required this.product,
+    required this.quantity,
+    required this.onIncrement,
+    required this.onDecrement,
+    required this.onAddToCart,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -357,6 +417,45 @@ class ProductSummaryCard extends StatelessWidget {
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
+          const SizedBox(height: AppSizes.space16),
+          Row(
+            children: [
+              Text(
+                'Qty:',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(width: AppSizes.space8),
+              QuantityButton(
+                quantity: quantity,
+                onIncrement: onIncrement,
+                onDecrement: onDecrement,
+              ),
+              const SizedBox(width: AppSizes.space12),
+              Expanded(
+                child: SizedBox(
+                  height: 40,
+                  child: ElevatedButton.icon(
+                    onPressed: onAddToCart,
+                    icon: const Icon(Icons.add_shopping_cart, size: 18),
+                    label: const Text('Add to Cart'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: theme.colorScheme.primary,
+                      foregroundColor: theme.colorScheme.onPrimary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                      ),
+                      textStyle: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: AppSizes.space16),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,

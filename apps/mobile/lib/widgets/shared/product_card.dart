@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/models/product.dart';
 import 'package:mobile/theme/theme_context.dart';
 import 'package:mobile/providers/favorites_provider.dart';
+import 'package:mobile/providers/auth_provider.dart';
+import 'package:mobile/providers/cart_provider.dart';
 import 'package:provider/provider.dart';
 
 class ProductCard extends StatelessWidget {
@@ -92,12 +94,62 @@ class ProductCard extends StatelessWidget {
 
                       SizedBox(height: context.sizes.space12),
 
-                      Text(
-                        '\$${product.price.toStringAsFixed(2)}',
-                        style: context.textTheme.titleSmall?.copyWith(
-                          color: context.colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '\$${product.price.toStringAsFixed(2)}',
+                            style: context.textTheme.titleSmall?.copyWith(
+                              color: context.colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          ClipOval(
+                            child: Material(
+                              color: context.colorScheme.primary.withValues(alpha: 0.15),
+                              child: InkWell(
+                                onTap: () async {
+                                  final auth = context.read<AuthProvider>();
+                                  if (!auth.isLoggedIn) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Please log in to add items to cart'),
+                                        backgroundColor: Colors.redAccent,
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  final cart = context.read<CartProvider>();
+                                  if (cart.isLoading) return;
+
+                                  if (cart.cart == null) {
+                                    await cart.initializeCart(auth.currentUser!.id);
+                                  }
+                                  await cart.addToCart(product, 1);
+
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('${product.name} added to cart!'),
+                                        duration: const Duration(seconds: 2),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.add_shopping_cart,
+                                    color: context.colorScheme.primary,
+                                    size: 18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
