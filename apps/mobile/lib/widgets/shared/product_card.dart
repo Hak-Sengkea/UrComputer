@@ -7,10 +7,14 @@ import 'package:provider/provider.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
+  final double? width;
+  final bool compact;
 
   const ProductCard({
     super.key,
     required this.product,
+    this.width,
+    this.compact = false,
   });
 
   @override
@@ -26,13 +30,11 @@ class ProductCard extends StatelessWidget {
           onTap: () {
             context.pushNamed(
               'product_detail',
-              pathParameters: {
-                'id': product.id,
-              },
+              pathParameters: {'id': product.id},
             );
           },
           child: SizedBox(
-            width: 280,
+            width: width,
             child: Stack(
               fit: StackFit.expand,
               children: [

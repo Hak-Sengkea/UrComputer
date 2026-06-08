@@ -7,6 +7,7 @@ import 'package:mobile/features/home/widgets/product_section.dart';
 import 'package:mobile/models/product.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/providers/brand_provider.dart';
+import 'package:mobile/providers/category_provider.dart';
 import 'package:mobile/providers/product_provider.dart';
 import 'package:mobile/providers/favorites_provider.dart';
 import 'package:mobile/theme/app_colors.dart';
@@ -23,8 +24,10 @@ class HomeScreen extends StatelessWidget {
     final productProvider = context.watch<ProductProvider>();
     final brandProvider = context.watch<BrandProvider>();
     final favoritesProvider = context.watch<FavoritesProvider>();
+    final categoryProvider = context.watch<CategoryProvider>();
     final authProvider = context.read<AuthProvider>();
     final List<Product> products = productProvider.products;
+    final categories = categoryProvider.categories;
     final List<Product> pcComponents = products
         .where((p) => p.categoryId == 'c81dfa01-9f9e-4c74-a029-79257e84f503')
         .toList();
@@ -105,15 +108,31 @@ class HomeScreen extends StatelessWidget {
               ],
               const SizedBox(height: AppSizes.space12),
               CategoryOverview(
-                icons: [
-                  Icons.laptop,
-                  Icons.headphones,
-                  Icons.memory,
-                  Icons.computer,
-                  Icons.router,
-                  Icons.storage,
-                ],
-                labels: ['Laptop', 'Audio', 'RAM', 'PC', 'Network', 'Storage'],
+                icons: categories.isEmpty
+                    ? const [
+                        Icons.laptop,
+                        Icons.headphones,
+                        Icons.memory,
+                        Icons.computer,
+                        Icons.router,
+                        Icons.storage,
+                      ]
+                    : categories
+                          .map((category) => _iconForCategory(category.name))
+                          .toList(),
+                labels: categories.isEmpty
+                    ? const [
+                        'Laptop',
+                        'Audio',
+                        'RAM',
+                        'PC',
+                        'Network',
+                        'Storage',
+                      ]
+                    : categories.map((category) => category.name).toList(),
+                categoryIds: categories.isEmpty
+                    ? null
+                    : categories.map((category) => category.id).toList(),
               ),
               const SizedBox(height: AppSizes.space8),
               ProductSection(title: 'Custom PC Builds', products: pcBuilds),
@@ -154,5 +173,30 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  IconData _iconForCategory(String name) {
+    final lowerName = name.toLowerCase();
+
+    if (lowerName.contains('laptop')) return Icons.laptop_mac;
+    if (lowerName.contains('audio') || lowerName.contains('headphone')) {
+      return Icons.headphones;
+    }
+    if (lowerName.contains('ram') || lowerName.contains('memory')) {
+      return Icons.memory;
+    }
+    if (lowerName.contains('pc') || lowerName.contains('build')) {
+      return Icons.desktop_windows;
+    }
+    if (lowerName.contains('network') || lowerName.contains('router')) {
+      return Icons.router;
+    }
+    if (lowerName.contains('storage') ||
+        lowerName.contains('ssd') ||
+        lowerName.contains('hdd')) {
+      return Icons.storage;
+    }
+
+    return Icons.devices_other;
   }
 }

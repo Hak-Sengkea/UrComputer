@@ -46,17 +46,37 @@ class ProductRepository {
 
   Future<Product?> getProductById(String id) async {
     try {
-      final response = await _supabase
+      final productResponse = await _supabase
           .from('products')
-          .select('''*,
-          product_images(*)
-        ''')
+          .select()
           .eq('id', id)
           .maybeSingle();
-      if (response == null) return null;
-      return Product.fromJson(response);
+
+      if (productResponse == null) return null;
+
+      final productJson = Map<String, dynamic>.from(productResponse);
+      final productImages = await _getProductImages(id);
+      productJson['product_images'] = productImages;
+
+      return Product.fromJson(productJson);
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> _getProductImages(String productId) async {
+    try {
+      final response = await _supabase
+          .from('product_images')
+          .select()
+          .eq('product_id', productId)
+          .order('display_order', ascending: true);
+
+      return (response as List)
+          .map((json) => Map<String, dynamic>.from(json))
+          .toList();
+    } catch (e) {
+      return [];
     }
   }
 
