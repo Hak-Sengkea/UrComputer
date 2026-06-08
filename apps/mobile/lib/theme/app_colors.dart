@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// TechForge Design System - Semantic Color Palette
+/// UrComputer Design System - Semantic Color Palette
 /// Simplified naming for clearer implementation.
 
 class AppColors {

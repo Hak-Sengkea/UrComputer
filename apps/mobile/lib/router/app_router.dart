@@ -5,8 +5,12 @@ import 'package:mobile/features/cart/cart_screen.dart';
 import 'package:mobile/features/home/home_screen.dart';
 import 'package:mobile/features/landing/landing_screen.dart';
 import 'package:mobile/features/products/builder_screen.dart';
+import 'package:mobile/features/products/product_by_category_screen.dart';
+import 'package:mobile/features/products/product_detail.dart';
+import 'package:mobile/features/products/search_screen.dart';
 import 'package:mobile/features/settings/setting_screen.dart';
 import 'package:mobile/features/support/support_screen.dart';
+import 'package:mobile/features/favorites/favorites_screen.dart';
 import 'package:mobile/features/testing/test_load_data.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/widgets/main_shell.dart';
@@ -22,10 +26,13 @@ GoRouter createRouter(AuthProvider authProvider) {
       // Public routes (no login required)
       final isPublicRoute = location == '/' ||
           location == '/login' ||
-          location == '/register';
+          location == '/register' ||
+          location == '/testing';
 
-      // If logged in and trying to access landing page, go to home
-      if (isLoggedIn && location == '/') {
+      if (isLoggedIn &&
+          (location == '/' ||
+              location == '/login' ||
+              location == '/register')) {
         return '/home';
       }
       
@@ -58,8 +65,13 @@ GoRouter createRouter(AuthProvider authProvider) {
         name: 'register',
         builder: (context, state) => const RegisterScreen(),
       ),
-      
-      // Protected routes (with bottom navigation)
+
+      GoRoute(
+        path: '/testing',
+        name: 'testing',
+        builder: (context, state) => const TestPage(),
+      ),
+
       ShellRoute(
         builder: (context, state, child) {
           return MainShell(child: child);
@@ -91,9 +103,40 @@ GoRouter createRouter(AuthProvider authProvider) {
             builder: (context, state) => const SettingScreen(),
           ),
           GoRoute(
-            path: '/testing',
-            name: 'testing',
-            builder: (context, state) => const TestPage(),
+            path: '/favorites',
+            name: 'favorites',
+            builder: (context, state) => const FavoritesScreen(),
+          ),
+          GoRoute(
+            path: '/product/:id',
+            name: 'product_detail',
+            builder: (context, state) {
+              final productId = state.pathParameters['id']!;
+              return ProductDetail(productId: productId);
+            },
+          ),
+          GoRoute(
+            path:'/search',
+            name: 'search',
+            builder: (context, state) {
+              final query = state.uri.queryParameters['q'] ?? '';
+              return SearchScreen(query: query);
+            },
+          ),
+          GoRoute(
+            path: '/category/:id',
+            name: 'category_products',
+            builder: (context, state) {
+              final categoryId = state.pathParameters['id']!;
+              final categoryName = state.extra is String
+                  ? state.extra as String
+                  : null;
+
+              return ProductByCategoryScreen(
+                categoryId: categoryId,
+                categoryName: categoryName,
+              );
+            },
           ),
         ],
       ),

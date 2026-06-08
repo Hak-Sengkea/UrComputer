@@ -7,7 +7,9 @@ class ProductRepository {
   Future<List<Product>> getAllProducts() async {
     final response = await _supabase
         .from('products')
-        .select()
+        .select('''*,
+          product_images(*)
+        ''')
         .order('id', ascending: true);
     return (response as List).map((json) => Product.fromJson(json)).toList();
   }
@@ -15,7 +17,9 @@ class ProductRepository {
   Future<List<Product>> getProductsByCategory(String categoryId) async {
     final response = await _supabase
         .from('products')
-        .select()
+        .select('''*,
+          product_images(*)
+        ''')
         .eq('category_id', categoryId);
     return (response as List).map((json) => Product.fromJson(json)).toList();
   }
@@ -42,15 +46,37 @@ class ProductRepository {
 
   Future<Product?> getProductById(String id) async {
     try {
-      final response = await _supabase
+      final productResponse = await _supabase
           .from('products')
           .select()
           .eq('id', id)
           .maybeSingle();
-      if (response == null) return null;
-      return Product.fromJson(response);
+
+      if (productResponse == null) return null;
+
+      final productJson = Map<String, dynamic>.from(productResponse);
+      final productImages = await _getProductImages(id);
+      productJson['product_images'] = productImages;
+
+      return Product.fromJson(productJson);
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> _getProductImages(String productId) async {
+    try {
+      final response = await _supabase
+          .from('product_images')
+          .select()
+          .eq('product_id', productId)
+          .order('display_order', ascending: true);
+
+      return (response as List)
+          .map((json) => Map<String, dynamic>.from(json))
+          .toList();
+    } catch (e) {
+      return [];
     }
   }
 
@@ -63,10 +89,7 @@ class ProductRepository {
   }
 
   Future<List<Product>> getInStockProducts() async {
-    final response = await _supabase
-        .from('products')
-        .select()
-        .gt('stock', 0);
+    final response = await _supabase.from('products').select().gt('stock', 0);
     return (response as List).map((json) => Product.fromJson(json)).toList();
   }
 }

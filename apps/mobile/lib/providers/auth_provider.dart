@@ -19,9 +19,10 @@ class AuthProvider extends ChangeNotifier {
   
   AuthProvider() {
     _loadUser();
-    _listenToAuthChanges();  
+    _listenToAuthChanges();  // ✅ ADD THIS - Listen to Supabase auth state
   }
   
+  // ✅ ADD THIS METHOD - Listen to auth state changes from Supabase
   void _listenToAuthChanges() {
     _authService.authStateChanges.listen((event) {
       // When user logs out or session changes

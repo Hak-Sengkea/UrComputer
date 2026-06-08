@@ -67,9 +67,9 @@ class HeroSection extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.grey.withOpacity(0.15),
-                    Colors.grey.withOpacity(0.45),
-                    Colors.grey.withOpacity(0.75),
+                    Colors.grey.withValues(alpha: 0.15),
+                    Colors.grey.withValues(alpha: 0.45),
+                    Colors.grey.withValues(alpha: 0.75),
                   ],
                 ),
               ),
@@ -97,7 +97,7 @@ class HeroSection extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: AppColors.onSurface.withOpacity(0.8),
+                      color: AppColors.onSurface.withValues(alpha: 0.8),
                       height: 1.35,
                     ),
                   ),
