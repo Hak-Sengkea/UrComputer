@@ -31,7 +31,7 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
-    String? rawImage = json['image'];
+    String? rawImage = json['image'] ?? json['image_url'];
     String? resolvedImage = rawImage;
 
     if (rawImage != null && rawImage.isNotEmpty) {

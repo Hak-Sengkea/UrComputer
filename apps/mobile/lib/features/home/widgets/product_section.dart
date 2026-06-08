@@ -51,9 +51,7 @@ class ProductSection extends StatelessWidget {
               final product = products[index];
               return Padding(
                 padding: EdgeInsets.only(right: AppSizes.space16),
-                child: ProductCard(
-                  product: product,
-                ),
+                child: ProductCard(product: product, width: 280),
               );
             },
           ),
