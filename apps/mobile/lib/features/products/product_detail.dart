@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/const/app_sizes.dart';
 import 'package:mobile/models/product.dart';
@@ -96,6 +98,7 @@ class _ProductDetailState extends State<ProductDetail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ProductGallery(product: product),
+                // Text(jsonEncode(product.productImages?.map((e) => e.toJson()).toList())),
                 const SizedBox(height: AppSizes.space16),
                 ProductSummaryCard(product: product),
                 const SizedBox(height: AppSizes.space16),
@@ -160,7 +163,7 @@ class _ProductGalleryState extends State<ProductGallery> {
                       bottom: AppSizes.space12,
                       child: _ImageCountBadge(
                         count: images.length,
-                        label: selectedImage.viewAngle,
+                        label: selectedImage.productImages,
                       ),
                     ),
                   ],
@@ -203,22 +206,31 @@ class _ProductGalleryState extends State<ProductGallery> {
   List<_GalleryImage> get _galleryImages {
     final galleryImages = <_GalleryImage>[];
     final addedUrls = <String>{};
-    final mainImage = widget.product.image?.trim();
 
-    if (mainImage != null && mainImage.isNotEmpty) {
-      galleryImages.add(_GalleryImage(imageUrl: mainImage, viewAngle: 'Main'));
+    String normalizeUrl(String? value) => (value ?? '').trim();
+    String normalizeLabel(String? value) {
+      final label = (value ?? '').trim();
+      return label.isEmpty ? 'View' : label;
+    }
+
+    final mainImage = normalizeUrl(widget.product.image);
+    if (mainImage.isNotEmpty) {
+      galleryImages.add(_GalleryImage(imageUrl: mainImage,productImages: "master"));
       addedUrls.add(mainImage);
     }
 
-    final productImages = [...?widget.product.viewAngle]
+    final productImages = [...?widget.product.productImages]
       ..sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
 
     for (final image in productImages) {
-      final imageUrl = image.imageUrl.trim();
+      final imageUrl = normalizeUrl(image.imageUrl);
       if (imageUrl.isEmpty || addedUrls.contains(imageUrl)) continue;
 
       galleryImages.add(
-        _GalleryImage(imageUrl: imageUrl, viewAngle: image.viewAngle),
+        _GalleryImage(
+          imageUrl: imageUrl,
+          productImages: normalizeLabel(image.viewAngle),
+        ),
       );
       addedUrls.add(imageUrl);
     }
@@ -294,7 +306,7 @@ class _AngleThumbnail extends StatelessWidget {
                 right: AppSizes.space8,
                 bottom: AppSizes.space4,
                 child: Text(
-                  image.viewAngle,
+                  image.productImages,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -314,9 +326,9 @@ class _AngleThumbnail extends StatelessWidget {
 
 class _GalleryImage {
   final String imageUrl;
-  final String viewAngle;
+  final String productImages;
 
-  const _GalleryImage({required this.imageUrl, required this.viewAngle});
+  const _GalleryImage({required this.imageUrl, required this.productImages});
 }
 
 class ProductSummaryCard extends StatelessWidget {
