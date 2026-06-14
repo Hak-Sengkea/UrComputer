@@ -23,11 +23,14 @@ class Heading extends StatelessWidget implements PreferredSizeWidget {
               Scaffold.of(context).openDrawer();
             },
       ),
-      title: Text(
-        'UrComputer',
-        style: theme.textTheme.titleLarge?.copyWith(
-          color: AppColors.primary,
-          fontWeight: FontWeight.bold,
+      title: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          'UrComputer',
+          style: theme.textTheme.titleLarge?.copyWith(
+            color: AppColors.primary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       centerTitle: false,

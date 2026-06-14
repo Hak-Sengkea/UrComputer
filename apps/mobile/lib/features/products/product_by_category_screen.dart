@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobile/const/app_sizes.dart';
 import 'package:mobile/providers/product_provider.dart';
+import 'package:mobile/providers/compare_provider.dart';
 import 'package:mobile/theme/app_colors.dart';
 import 'package:mobile/widgets/shared/product_card.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +54,38 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(
+        title: Text(title),
+        actions: [
+          // Clear Compare Button with Label
+          Consumer<CompareProvider>(
+            builder: (context, compareProvider, child) {
+              final count = compareProvider.count;
+              return TextButton.icon(
+                style: TextButton.styleFrom(
+                  minimumSize: Size.zero,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                ),
+                icon: Badge(
+                  label: Text('$count'),
+                  isLabelVisible: count > 0,
+                  child: const Icon(Icons.compare_arrows_rounded, size: 20),
+                ),
+                label: Text(
+                  'Compare',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () {
+                  context.push('/compare');
+                },
+              );
+            },
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(AppSizes.edgeMarginMobile),
         child: productProvider.isLoading

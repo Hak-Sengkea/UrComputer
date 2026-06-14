@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/features/auth/login_screen.dart';
 import 'package:mobile/features/auth/register_screen.dart';
 import 'package:mobile/features/cart/cart_screen.dart';
+import 'package:mobile/features/compare/compare_screen.dart';
 import 'package:mobile/features/home/home_screen.dart';
 import 'package:mobile/features/landing/landing_screen.dart';
 import 'package:mobile/features/products/builder_screen.dart';
@@ -22,9 +23,10 @@ GoRouter createRouter(AuthProvider authProvider) {
     redirect: (context, state) {
       final location = state.matchedLocation;
       final isLoggedIn = authProvider.isLoggedIn;
-      
+
       // Public routes (no login required)
-      final isPublicRoute = location == '/' ||
+      final isPublicRoute =
+          location == '/' ||
           location == '/login' ||
           location == '/register' ||
           location == '/testing';
@@ -35,7 +37,7 @@ GoRouter createRouter(AuthProvider authProvider) {
               location == '/register')) {
         return '/home';
       }
-      
+
       // If logged in and trying to access login/register, go to home
       if (isLoggedIn && (location == '/login' || location == '/register')) {
         return '/home';
@@ -116,7 +118,7 @@ GoRouter createRouter(AuthProvider authProvider) {
             },
           ),
           GoRoute(
-            path:'/search',
+            path: '/search',
             name: 'search',
             builder: (context, state) {
               final query = state.uri.queryParameters['q'] ?? '';
@@ -137,6 +139,11 @@ GoRouter createRouter(AuthProvider authProvider) {
                 categoryName: categoryName,
               );
             },
+          ),
+          GoRoute(
+            path: '/compare',
+            name: 'compare',
+            builder: (context, state) => const CompareScreen(),
           ),
         ],
       ),

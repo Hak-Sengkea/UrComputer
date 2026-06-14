@@ -43,156 +43,408 @@ ON CONFLICT (id) DO UPDATE SET
 -- ==========================================
 -- SEED DATA FOR PRODUCTS
 -- ==========================================
-INSERT INTO public.products (id, name, price, brand_id, stock, category_id, image, description, rating) VALUES
+INSERT INTO public.products (id, name, description, price, discount, category_id, brand_id, image, stock, rating, reviews_count, specs) VALUES
+(
+  '035179e7-e58d-4388-8a74-31ab8dd1d2b4',
+  'WD Black SN850X 2TB NVMe SSD',
+  'High-performance gaming SSD with 7300MB/s speeds.',
+  189.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f506',
+  'b81dfa01-9f9e-4c74-a029-79257e84f605',
+  'wd_black_sn850x_2tb.jpg',
+  35,
+  4.80,
+  0,
+  '{"Capacity": "2TB", "Interface": "PCIe Gen4 x4", "Max Read Speed": "7300 MB/s", "Max Write Speed": "6600 MB/s", "Form Factor": "M.2 2280"}'::jsonb
+),
+(
+  '04d78e42-6d40-4de5-83bb-747d53825c84',
+  'Cooler Master MWE Gold 750W Power Supply',
+  '80+ Gold power supply with quiet operation.',
+  109.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f609',
+  'cooler_master_mwe_gold_750w.jpg',
+  35,
+  4.70,
+  0,
+  '{"Wattage": "750W", "Efficiency": "80+ Gold", "Modularity": "Fully Modular", "Fan Size": "120mm"}'::jsonb
+),
+(
+  '118c7c7c-0c05-4758-bfe0-4ab8d261c6f3',
+  'Fractal Design Pop Air Case',
+  'Stylish case with excellent airflow and RGB fans.',
+  79.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f615',
+  'fractal_design_pop_air.jpg',
+  30,
+  4.70,
+  0,
+  '{"Form Factor": "Mid Tower", "Motherboard Support": "ATX, Micro-ATX, Mini-ITX", "Side Panel": "Tempered Glass", "Included Fans": "3x 120mm RGB"}'::jsonb
+),
+(
+  '207f1862-5fdb-485b-beeb-7b3fc06c9894',
+  'NVIDIA RTX 4070 Ti Graphics Card',
+  'High-performance graphics card for 1440p gaming.',
+  799.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f613',
+  'nvidia_rtx_4070_ti.jpg',
+  15,
+  4.80,
+  0,
+  '{"GPU": "RTX 4070 Ti", "Memory": "12GB GDDR6X", "Bus Width": "192-bit", "Boost Clock": "2.61 GHz", "Recommended PSU": "700W"}'::jsonb
+),
+(
+  '3e0ba990-e432-411c-993b-5e966eb307be',
+  'Seasonic Focus GX-750W Power Supply',
+  'Compact 750W power supply with 80+ Gold certification.',
+  129.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f614',
+  'seasonic_focus_gx_750w.jpg',
+  40,
+  4.80,
+  0,
+  '{"Wattage": "750W", "Efficiency": "80+ Gold", "Modularity": "Fully Modular", "Fan Size": "120mm"}'::jsonb
+),
+(
+  '54e222e4-8127-4ecb-91b9-c26f6c6d74f3',
+  'G.Skill Trident Z5 32GB DDR5',
+  'RGB DDR5 memory with ultra-fast speeds.',
+  179.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f615',
+  'gskill_trident_z5_32gb.jpg',
+  28,
+  4.90,
+  0,
+  '{"Capacity": "32GB (2x16GB)", "Type": "DDR5", "Speed": "6000 MHz", "Latency": "CL30", "RGB": "Yes"}'::jsonb
+),
+(
+  '85e21132-b456-476e-8889-49058e191daf',
+  'Arctic Liquid Freezer III 360 Cooler',
+  '360mm AIO liquid cooler with excellent thermal performance.',
+  109.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f615',
+  'arctic_liquid_freezer_iii_360.jpg',
+  18,
+  4.80,
+  0,
+  '{"Cooler Type": "Liquid AIO", "Radiator Size": "360mm", "Fans": "3x 120mm PWM", "Sockets Supported": "Intel LGA1700, AMD AM4/AM5"}'::jsonb
+),
+(
+  '9296fb09-cf83-4ba2-940d-9ed53eb89f34',
+  'Corsair Vengeance RGB 32GB DDR5',
+  'High-performance RGB DDR5 memory for gaming.',
+  159.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f609',
+  'corsair_vengeance_rgb_32gb.jpg',
+  35,
+  4.80,
+  0,
+  '{"Capacity": "32GB (2x16GB)", "Type": "DDR5", "Speed": "6000 MHz", "Latency": "CL36", "RGB": "Yes"}'::jsonb
+),
+(
+  'a5189a79-f1b5-4f38-97cd-2ff09b8b6b8b',
+  'Gigabyte Z790 AORUS Elite AX',
+  'Feature-rich Z790 motherboard with excellent VRM cooling.',
+  279.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f611',
+  'Z790 AORUS ELITE AX-04.png',
+  18,
+  4.70,
+  0,
+  '{"Socket": "LGA1700", "Chipset": "Intel Z790", "Form Factor": "ATX", "RAM Slots": "4x DDR5", "Wireless": "Wi-Fi 6E + Bluetooth 5.3"}'::jsonb
+),
+(
+  'adef2e9f-6cc2-4fdc-999a-17d02011dfe0',
+  'AMD Ryzen 7 7800X3D Processor',
+  'Top-tier gaming processor with 3D V-Cache.',
+  449.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f616',
+  'amd_ryzen_7_7800x3d.jpg',
+  20,
+  4.90,
+  0,
+  '{"Cores": "8", "Threads": "16", "Base Clock": "4.2 GHz", "Boost Clock": "5.0 GHz", "Socket": "AM5", "Cache": "96MB L3 (3D V-Cache)", "TDP": "120W"}'::jsonb
+),
+(
+  'd1edf227-aee2-49ef-82e9-d20a8c5516c4',
+  'Samsung 990 Pro 1TB NVMe SSD',
+  'PCIe 4.0 NVMe SSD with 7450MB/s read speeds.',
+  159.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f506',
+  'b81dfa01-9f9e-4c74-a029-79257e84f610',
+  'samsung_990_pro_1tb.jpg',
+  50,
+  4.90,
+  0,
+  '{"Capacity": "1TB", "Interface": "PCIe Gen4 x4", "Max Read Speed": "7450 MB/s", "Max Write Speed": "6900 MB/s", "Form Factor": "M.2 2280"}'::jsonb
+),
+(
+  'd51589ed-a3ff-4f47-81b6-5e3b72663877',
+  'Cooler Master Hyper 212 Cooler',
+  'Best-selling CPU cooler with reliable performance.',
+  44.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f609',
+  'cooler_master_hyper_212.jpg',
+  60,
+  4.70,
+  0,
+  '{"Cooler Type": "Air Cooler", "Fan Size": "120mm PWM", "Height": "154mm", "Sockets Supported": "Intel LGA1700/1200/115X, AMD AM4/AM5"}'::jsonb
+),
 (
   'd81dfa01-9f9e-4c74-a029-79257e84f701',
-  'Acer Gaming Headphones',
+  'Acer Predator Gaming Monitor',
+  'High-resolution Acer Predator gaming monitor with fast response rate and vibrant colors.',
   199.00,
-  'b81dfa01-9f9e-4c74-a029-79257e84f607', -- Acer
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f504',
+  'b81dfa01-9f9e-4c74-a029-79257e84f607',
+  'acer_monitor.jpg',
   32,
-  'c81dfa01-9f9e-4c74-a029-79257e84f504', -- Peripherals
-  'https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/acer_headphones.jpg',
-  'Immersive gaming headphones with surround sound and RGB accents.',
-  4.6
+  4.60,
+  0,
+  '{"Screen Size": "27\"", "Resolution": "2560x1440 (QHD)", "Panel Type": "IPS", "Refresh Rate": "170Hz", "Response Time": "1ms"}'::jsonb
 ),
 (
   'd81dfa01-9f9e-4c74-a029-79257e84f702',
-  'ASUS Gaming Laptop',
-  1599.00,
-  'b81dfa01-9f9e-4c74-a029-79257e84f601', -- ASUS
-  14,
-  'c81dfa01-9f9e-4c74-a029-79257e84f501', -- Gaming Laptops
-  'https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/asus_laptop.jpg',
+  'ASUS ROG Zephyrus G14 Gaming Laptop',
   'High-performance ASUS gaming laptop built for competitive gaming.',
-  4.8
+  1599.00,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f501',
+  'b81dfa01-9f9e-4c74-a029-79257e84f601',
+  'asus_laptop.jpg',
+  14,
+  4.80,
+  0,
+  '{"CPU": "AMD Ryzen 9 7940HS", "GPU": "NVIDIA RTX 4060", "RAM": "16GB DDR5", "Storage": "1TB NVMe SSD", "Display": "14\" QHD+ 165Hz", "Weight": "1.72 kg"}'::jsonb
 ),
 (
   'd81dfa01-9f9e-4c74-a029-79257e84f703',
-  'ASUS ROG Headset',
-  249.00,
-  'b81dfa01-9f9e-4c74-a029-79257e84f617', -- ASUS ROG
-  21,
-  'c81dfa01-9f9e-4c74-a029-79257e84f504', -- Peripherals
-  'https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/asus_rog_headphones.webp',
+  'ASUS ROG Delta S Headset',
   'Premium ROG headset with crystal-clear sound and deep bass.',
-  4.7
+  249.00,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f504',
+  'b81dfa01-9f9e-4c74-a029-79257e84f617',
+  'asus_rog_headphones.webp',
+  21,
+  4.70,
+  0,
+  '{"Audio Type": "Over-Ear Gaming", "Connector": "USB-C / USB 2.0", "Drivers": "50mm", "RGB": "Yes", "DAC": "ESS 9281 Quad-DAC"}'::jsonb
 ),
 (
   'd81dfa01-9f9e-4c74-a029-79257e84f704',
-  'Dell Gaming Laptop',
-  1399.00,
-  'b81dfa01-9f9e-4c74-a029-79257e84f605', -- Dell
-  10,
-  'c81dfa01-9f9e-4c74-a029-79257e84f501', -- Gaming Laptops
-  'https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/dell_laptop.jpg',
+  'Dell G15 Gaming Laptop',
   'Powerful Dell gaming laptop with RTX graphics and fast refresh display.',
-  4.5
+  1399.00,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f501',
+  'b81dfa01-9f9e-4c74-a029-79257e84f605',
+  'dell_laptop.jpg',
+  10,
+  4.50,
+  0,
+  '{"CPU": "Intel Core i7-13650HX", "GPU": "NVIDIA RTX 4060", "RAM": "16GB DDR5", "Storage": "512GB NVMe SSD", "Display": "15.6\" FHD 165Hz", "Weight": "2.81 kg"}'::jsonb
 ),
 (
   'd81dfa01-9f9e-4c74-a029-79257e84f705',
-  'NVIDIA RTX Graphics Card',
-  899.00,
-  'b81dfa01-9f9e-4c74-a029-79257e84f613', -- NVIDIA
-  8,
-  'c81dfa01-9f9e-4c74-a029-79257e84f503', -- PC Components
-  'https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/gpu.jpg',
+  'NVIDIA GeForce RTX 4070 Super',
   'Next-generation graphics card designed for high-end gaming and rendering.',
-  4.9
+  899.00,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f613',
+  'gpu.jpg',
+  8,
+  4.90,
+  0,
+  '{"GPU": "RTX 4070 Super", "Memory": "12GB GDDR6X", "Bus Width": "192-bit", "Boost Clock": "2.48 GHz", "Recommended PSU": "650W"}'::jsonb
 ),
 (
   'd81dfa01-9f9e-4c74-a029-79257e84f706',
-  'RGB Gaming GPU',
-  999.00,
-  'b81dfa01-9f9e-4c74-a029-79257e84f613', -- NVIDIA
-  6,
-  'c81dfa01-9f9e-4c74-a029-79257e84f503', -- PC Components
-  'https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/gpu1.png',
+  'NVIDIA GeForce RTX 4080 Super',
   'RGB-powered gaming GPU built for ultra performance and aesthetics.',
-  4.8
+  999.00,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f613',
+  'gpu1.png',
+  6,
+  4.80,
+  0,
+  '{"GPU": "RTX 4080 Super", "Memory": "16GB GDDR6X", "Bus Width": "256-bit", "Boost Clock": "2.55 GHz", "Recommended PSU": "750W"}'::jsonb
 ),
 (
   'd81dfa01-9f9e-4c74-a029-79257e84f707',
-  'Intel Core i7 Processor',
-  399.00,
-  'b81dfa01-9f9e-4c74-a029-79257e84f614', -- Intel
-  26,
-  'c81dfa01-9f9e-4c74-a029-79257e84f503', -- PC Components
-  'https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/intel_corei7.jpg',
+  'Intel Core i7-14700K Processor',
   'High-speed Intel processor optimized for gaming and multitasking.',
-  4.7
+  399.00,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f614',
+  'intel_corei7.jpg',
+  26,
+  4.70,
+  0,
+  '{"Cores": "20 (8P + 12E)", "Threads": "28", "Base Clock": "3.4 GHz", "Boost Clock": "5.6 GHz", "Socket": "LGA1700", "Cache": "33MB L3", "TDP": "125W"}'::jsonb
 ),
 (
   'd81dfa01-9f9e-4c74-a029-79257e84f708',
-  'Intel Core i9 Processor',
-  599.00,
-  'b81dfa01-9f9e-4c74-a029-79257e84f614', -- Intel
-  18,
-  'c81dfa01-9f9e-4c74-a029-79257e84f503', -- PC Components
-  'https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/Intel_corei9.jpg',
+  'Intel Core i9-14900K Processor',
   'Flagship Intel CPU delivering elite gaming and workstation performance.',
-  4.9
+  599.00,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f614',
+  'Intel_corei9.jpg',
+  18,
+  4.90,
+  0,
+  '{"Cores": "24 (8P + 16E)", "Threads": "32", "Base Clock": "3.2 GHz", "Boost Clock": "6.0 GHz", "Socket": "LGA1700", "Cache": "36MB L3", "TDP": "125W"}'::jsonb
 ),
 (
   'd81dfa01-9f9e-4c74-a029-79257e84f709',
   'Custom Gaming PC Build',
-  2499.00,
-  'b81dfa01-9f9e-4c74-a029-79257e84f615', -- Custom
-  4,
-  'c81dfa01-9f9e-4c74-a029-79257e84f502', -- PC Builds
-  'https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/pc_build.jpeg',
   'Ultimate custom-built RGB gaming PC with enthusiast-grade hardware.',
-  5.0
+  2499.00,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f502',
+  'b81dfa01-9f9e-4c74-a029-79257e84f615',
+  'pc_build.jpeg',
+  4,
+  5.00,
+  0,
+  '{"Case": "Corsair 4000D Airflow", "Motherboard": "Gigabyte Z790 AORUS Elite AX", "CPU": "Intel Core i9-14900K", "GPU": "RTX 4080 Super", "RAM": "Corsair Vengeance RGB 32GB DDR5", "Storage": "Samsung 990 Pro 1TB NVMe SSD", "PSU": "Seasonic Focus GX-750W"}'::jsonb
 ),
 (
   'd81dfa01-9f9e-4c74-a029-79257e84f710',
-  'Corsair RGB RAM',
-  149.00,
-  'b81dfa01-9f9e-4c74-a029-79257e84f609', -- Corsair
-  40,
-  'c81dfa01-9f9e-4c74-a029-79257e84f503', -- PC Components
-  'https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/ram.jpg',
+  'Corsair Vengeance RGB 16GB RAM',
   'High-speed DDR5 RGB memory designed for modern gaming systems.',
-  4.6
+  149.00,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f609',
+  'ram.jpg',
+  40,
+  4.60,
+  0,
+  '{"Capacity": "16GB (2x8GB)", "Type": "DDR5", "Speed": "5200 MHz", "Latency": "CL40", "RGB": "Yes"}'::jsonb
 ),
 (
   'd81dfa01-9f9e-4c74-a029-79257e84f711',
-  'ROG Gaming Laptop',
-  1899.00,
-  'b81dfa01-9f9e-4c74-a029-79257e84f617', -- ASUS ROG
-  11,
-  'c81dfa01-9f9e-4c74-a029-79257e84f501', -- Gaming Laptops
-  'https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/rog_laptop.jpg',
+  'ASUS ROG Strix Scar 16 Laptop',
   'Premium ROG gaming laptop engineered for high FPS gaming.',
-  4.9
+  1899.00,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f501',
+  'b81dfa01-9f9e-4c74-a029-79257e84f617',
+  'rog_laptop.jpg',
+  11,
+  4.90,
+  0,
+  '{"CPU": "Intel Core i9-13980HX", "GPU": "NVIDIA RTX 4080", "RAM": "32GB DDR5", "Storage": "1TB NVMe SSD", "Display": "16\" QHD+ 240Hz Mini-LED", "Weight": "2.50 kg"}'::jsonb
 ),
 (
   'd81dfa01-9f9e-4c74-a029-79257e84f712',
-  'AMD Ryzen 9000 Series',
-  699.00,
-  'b81dfa01-9f9e-4c74-a029-79257e84f616', -- AMD
-  15,
-  'c81dfa01-9f9e-4c74-a029-79257e84f503', -- PC Components
-  'https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/ryzen_amd9000series.jpg',
+  'AMD Ryzen 9 9950X Processor',
   'Next-generation Ryzen processor with exceptional gaming performance.',
-  4.8
+  699.00,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f616',
+  'ryzen_amd9000series.jpg',
+  15,
+  4.80,
+  0,
+  '{"Cores": "16", "Threads": "32", "Base Clock": "4.3 GHz", "Boost Clock": "5.7 GHz", "Socket": "AM5", "Cache": "64MB L3", "TDP": "170W"}'::jsonb
 ),
 (
   'd81dfa01-9f9e-4c74-a029-79257e84f713',
-  'ASUS TUF Gaming Laptop',
-  1299.00,
-  'b81dfa01-9f9e-4c74-a029-79257e84f601', -- ASUS
-  17,
-  'c81dfa01-9f9e-4c74-a029-79257e84f501', -- Gaming Laptops
-  'https://bcldnermnresieeabyan.supabase.co/storage/v1/object/public/products/tuf_laptop.jpg',
+  'ASUS TUF Gaming A15 Laptop',
   'Durable ASUS TUF gaming laptop with powerful cooling and performance.',
-  4.7
+  1299.00,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f501',
+  'b81dfa01-9f9e-4c74-a029-79257e84f601',
+  'tuf_laptop.jpg',
+  17,
+  4.70,
+  0,
+  '{"CPU": "AMD Ryzen 7 7735HS", "GPU": "NVIDIA RTX 4050", "RAM": "16GB DDR5", "Storage": "512GB NVMe SSD", "Display": "15.6\" FHD 144Hz", "Weight": "2.20 kg"}'::jsonb
+),
+(
+  'e8be422f-35c6-4376-84e5-61f94b3a006e',
+  'Kingston Fury 16GB DDR4',
+  'Reliable DDR4 memory for gaming and productivity.',
+  89.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f609',
+  'kingston_fury_16gb.jpg',
+  50,
+  4.70,
+  0,
+  '{"Capacity": "16GB (2x8GB)", "Type": "DDR4", "Speed": "3200 MHz", "Latency": "CL16", "RGB": "No"}'::jsonb
+),
+(
+  'ec3ef49e-951b-42ba-92f2-0682f9e1a9cf',
+  'Corsair iCUE H100i Elite Cooler',
+  '240mm RGB liquid cooler with iCUE software.',
+  149.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f609',
+  'corsair_icue_h100i_elite.jpg',
+  22,
+  4.80,
+  0,
+  '{"Cooler Type": "Liquid AIO", "Radiator Size": "240mm", "Fans": "2x 120mm RGB PWM", "Sockets Supported": "Intel LGA1700, AMD AM4/AM5"}'::jsonb
+),
+(
+  'fe762bed-70d8-4191-880e-4c54f669c954',
+  'Corsair 4000D Airflow Case',
+  'High-airflow case perfect for performance builds.',
+  94.99,
+  0.00,
+  'c81dfa01-9f9e-4c74-a029-79257e84f503',
+  'b81dfa01-9f9e-4c74-a029-79257e84f609',
+  'corsair_4000d_airflow.jpg',
+  45,
+  4.70,
+  0,
+  '{"Form Factor": "Mid Tower", "Motherboard Support": "ATX, Micro-ATX, Mini-ITX", "Side Panel": "Tempered Glass", "Included Fans": "2x 120mm"}'::jsonb
 )
 ON CONFLICT (id) DO UPDATE SET
   name = EXCLUDED.name,
-  price = EXCLUDED.price,
-  brand_id = EXCLUDED.brand_id,
-  stock = EXCLUDED.stock,
-  category_id = EXCLUDED.category_id,
-  image = EXCLUDED.image,
   description = EXCLUDED.description,
-  rating = EXCLUDED.rating;
+  price = EXCLUDED.price,
+  discount = EXCLUDED.discount,
+  category_id = EXCLUDED.category_id,
+  brand_id = EXCLUDED.brand_id,
+  image = EXCLUDED.image,
+  stock = EXCLUDED.stock,
+  rating = EXCLUDED.rating,
+  reviews_count = EXCLUDED.reviews_count,
+  specs = EXCLUDED.specs;

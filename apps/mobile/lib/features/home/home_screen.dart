@@ -5,11 +5,11 @@ import 'package:mobile/features/home/widgets/category_overview.dart';
 import 'package:mobile/features/home/widgets/hero_section.dart';
 import 'package:mobile/features/home/widgets/product_section.dart';
 import 'package:mobile/models/product.dart';
-import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/providers/brand_provider.dart';
 import 'package:mobile/providers/category_provider.dart';
 import 'package:mobile/providers/product_provider.dart';
 import 'package:mobile/providers/favorites_provider.dart';
+import 'package:mobile/providers/compare_provider.dart';
 import 'package:mobile/theme/app_colors.dart';
 import 'package:mobile/theme/app_text_style.dart';
 import 'package:mobile/widgets/heading.dart';
@@ -25,7 +25,6 @@ class HomeScreen extends StatelessWidget {
     final brandProvider = context.watch<BrandProvider>();
     final favoritesProvider = context.watch<FavoritesProvider>();
     final categoryProvider = context.watch<CategoryProvider>();
-    final authProvider = context.read<AuthProvider>();
     final List<Product> products = productProvider.products;
     final categories = categoryProvider.categories;
     final List<Product> pcComponents = products
@@ -43,7 +42,40 @@ class HomeScreen extends StatelessWidget {
       appBar: Heading(
         onMenuPressed: () {},
         actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+          // 1. Functional Search Button
+          IconButton(
+            tooltip: 'Search Products',
+            icon: const Icon(Icons.search),
+            onPressed: () => context.push('/search'),
+          ),
+          // 2. Clear Compare Button with Label
+          Consumer<CompareProvider>(
+            builder: (context, compareProvider, child) {
+              final count = compareProvider.count;
+              return TextButton.icon(
+                style: TextButton.styleFrom(
+                  minimumSize: Size.zero,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                ),
+                icon: Badge(
+                  label: Text('$count'),
+                  isLabelVisible: count > 0,
+                  child: const Icon(Icons.compare_arrows_rounded, size: 20),
+                ),
+                label: Text(
+                  'Compare',
+                  style: TextStyle(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () {
+                  context.push('/compare');
+                },
+              );
+            },
+          ),
+          // 3. Favorites Badge Button
           Badge(
             label: Text('${favoritesProvider.favorites.length}'),
             isLabelVisible: favoritesProvider.favorites.isNotEmpty,
@@ -61,16 +93,6 @@ class HomeScreen extends StatelessWidget {
                 context.push('/favorites');
               },
             ),
-          ),
-          IconButton(
-            tooltip: 'Logout',
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await authProvider.logout();
-              if (context.mounted) {
-                context.go('/login');
-              }
-            },
           ),
         ],
       ),

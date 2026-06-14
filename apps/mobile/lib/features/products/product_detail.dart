@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobile/const/app_sizes.dart';
 import 'package:mobile/models/product.dart';
 import 'package:mobile/providers/product_provider.dart';
 import 'package:mobile/providers/favorites_provider.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/providers/cart_provider.dart';
+import 'package:mobile/providers/compare_provider.dart';
 import 'package:mobile/features/cart/widgets/quantity_button.dart';
+import 'package:mobile/theme/theme_context.dart';
 import 'package:provider/provider.dart';
 
 class ProductDetail extends StatefulWidget {
@@ -77,11 +80,76 @@ class _ProductDetailState extends State<ProductDetail> {
           appBar: AppBar(
             title: const Text('Product Detail'),
             actions: [
+              // 1. Add to Compare Button (Text + Icon for clarity)
+              TextButton.icon(
+                label: Text(
+                  'Compare',
+                  style: context.textTheme.labelLarge?.copyWith(
+                    color: context.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                icon: Icon(Icons.compare_arrows_rounded, color: context.colorScheme.primary, size: 20),
+                onPressed: () {
+                  final compareProvider = context.read<CompareProvider>();
+                  final router = GoRouter.of(context); // Save GoRouter reference before page is disposed!
+
+                  // Check if already in the compare list
+                  if (compareProvider.selectedProducts.any((p) => p.id == product.id)) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('This product is already in the compare list.'),
+                        backgroundColor: context.colorScheme.error,
+                      ),
+                    );
+                    return;
+                  }
+
+                  // Check if limit of 3 is reached
+                  if (compareProvider.selectedProducts.length >= 3) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('Comparison list is full. Limit is 3 products.'),
+                        backgroundColor: context.colorScheme.error,
+                      ),
+                    );
+                    return;
+                  }
+
+                  // Check if it belongs to a different category
+                  if (compareProvider.selectedProducts.isNotEmpty &&
+                      compareProvider.selectedProducts.first.categoryId != product.categoryId) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('Cannot compare: items must be from the same category.'),
+                        backgroundColor: context.colorScheme.error,
+                      ),
+                    );
+                    return;
+                  }
+
+                  final wasAdded = compareProvider.addProduct(product);
+                  if (wasAdded) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${product.name} added to comparison!'),
+                        backgroundColor: context.colorScheme.primary,
+                        action: SnackBarAction(
+                          label: 'View Compare',
+                          textColor: context.colorScheme.onPrimary,
+                          onPressed: () => router.push('/compare'), // Safe navigation!
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
+              // 2. Add to Favorites Button
               IconButton(
                 tooltip: isFav ? 'Remove from Favorites' : 'Add to Favorites',
                 icon: Icon(
                   isFav ? Icons.favorite : Icons.favorite_border,
-                  color: isFav ? Colors.redAccent : null,
+                  color: isFav ? context.colorScheme.error : null,
                 ),
                 onPressed: () {
                   favoritesProvider.toggleFavorite(product);

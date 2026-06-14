@@ -3,15 +3,16 @@ import 'package:mobile/providers/app_state_provider.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/providers/brand_provider.dart';
 import 'package:mobile/providers/category_provider.dart';
+import 'package:mobile/providers/compare_provider.dart';
 import 'package:mobile/providers/product_provider.dart';
 import 'package:mobile/providers/user_provider.dart';
 import 'package:mobile/providers/cart_provider.dart';
 import 'package:mobile/providers/favorites_provider.dart';
 import 'package:mobile/data/repository/cart_repository.dart';
 import 'package:provider/provider.dart';
-import 'providers/pc_builder_provider.dart';
-import 'router/app_router.dart';
-import 'theme/app_theme.dart';
+import 'package:mobile/providers/pc_builder_provider.dart';
+import 'package:mobile/router/app_router.dart';
+import 'package:mobile/theme/app_theme.dart';
 
 class UrComputerApp extends StatelessWidget {
   const UrComputerApp({super.key});
@@ -37,6 +38,7 @@ class UrComputerApp extends StatelessWidget {
           create: (_) => FavoritesProvider()..loadFavorites(),
         ),
         ChangeNotifierProvider(create: (_) => PCBuilderProvider()),
+        ChangeNotifierProvider(create: (_) => CompareProvider()),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {

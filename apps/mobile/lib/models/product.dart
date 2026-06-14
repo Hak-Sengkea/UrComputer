@@ -14,6 +14,7 @@ class Product {
   final int? stock;
   final double? rating;
   final int? reviews;
+  final Map<String, dynamic> specs;
 
   Product({
     required this.id,
@@ -28,6 +29,7 @@ class Product {
     this.stock,
     this.rating,
     this.reviews,
+    required this.specs,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,7 @@ class Product {
               .map((img) => ProductImage.fromJson(img))
               .toList()
         : null;
+    final specsJson = json['specs'] as Map<String, dynamic>? ?? const {};
 
     productImages?.sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
 
@@ -72,6 +75,7 @@ class Product {
           ? (json['rating'] as num).toDouble()
           : null,
       reviews: json['reviews'] ?? json['reviews_count'],
+      specs: specsJson,
     );
   }
 
@@ -89,6 +93,7 @@ class Product {
       'stock': stock,
       'rating': rating,
       'reviews_count': reviews,
+      'specs': specs,
     };
   }
 

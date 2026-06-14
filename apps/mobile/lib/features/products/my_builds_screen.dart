@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile/theme/theme_context.dart';
 import '../../providers/pc_builder_provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/compare_provider.dart';
 import '../../models/pc_build.dart';
 import 'view_build_screen.dart';
 
@@ -85,9 +87,19 @@ class _MyBuildsScreenState extends State<MyBuildsScreen> {
   }
   
   Widget _buildCard(PCBuild build, PCBuilderProvider provider) {
+    final compareProvider = context.watch<CompareProvider>();
+    final isSelectedForCompare = compareProvider.selectedBuilds.any((b) => b.id == build.id);
+
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       color: Colors.grey[900],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(context.sizes.radiusMedium),
+        side: BorderSide(
+          color: isSelectedForCompare ? context.customColors.success : Colors.transparent,
+          width: 2,
+        ),
+      ),
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -97,7 +109,7 @@ class _MyBuildsScreenState extends State<MyBuildsScreen> {
             ),
           );
         },
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(context.sizes.radiusMedium),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -114,6 +126,43 @@ class _MyBuildsScreenState extends State<MyBuildsScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                  ),
+                  // Compare Toggle Button
+                  IconButton(
+                    icon: Icon(
+                      isSelectedForCompare ? Icons.check_box : Icons.compare_arrows_rounded,
+                      color: isSelectedForCompare
+                          ? context.customColors.success
+                          : context.colorScheme.onSurfaceVariant,
+                    ),
+                    tooltip: 'Compare Build',
+                    onPressed: () {
+                      final router = GoRouter.of(context); // Save GoRouter reference before page is disposed!
+                      if (isSelectedForCompare) {
+                        compareProvider.removeBuild(build.id);
+                      } else {
+                        final added = compareProvider.addBuild(build);
+                        if (added) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Added "${build.buildName}" to Compare!'),
+                              action: SnackBarAction(
+                                label: 'Compare',
+                                textColor: context.colorScheme.onPrimary,
+                                onPressed: () => router.push('/compare'), // Safe navigation!
+                              ),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text('Cannot add. Max 2 PC Builds can be compared side-by-side.'),
+                              backgroundColor: context.colorScheme.error,
+                            ),
+                          );
+                        }
+                      }
+                    },
                   ),
                   PopupMenuButton(
                     icon: const Icon(Icons.more_vert),
