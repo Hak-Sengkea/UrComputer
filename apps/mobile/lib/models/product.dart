@@ -10,7 +10,7 @@ class Product {
   final String categoryId;
   final String brandId;
   final String? image;
-  final List<ProductImage>? viewAngle;
+  final List<ProductImage>? productImages;
   final int? stock;
   final double? rating;
   final int? reviews;
@@ -23,7 +23,7 @@ class Product {
     this.discount,
     required this.categoryId,
     required this.brandId,
-    required this.viewAngle,
+    required this.productImages,
     this.image,
     this.stock,
     this.rating,
@@ -32,6 +32,7 @@ class Product {
 
   factory Product.fromJson(Map<String, dynamic> json) {
     String? rawImage = json['image'] ?? json['image_url'];
+    rawImage = rawImage?.trim();
     String? resolvedImage = rawImage;
 
     if (rawImage != null && rawImage.isNotEmpty) {
@@ -46,7 +47,7 @@ class Product {
       }
     }
 
-    final productImagesJson = json['product_images'] ?? json['view_angle'];
+    final productImagesJson = json['product_images'] ;
     final productImages = productImagesJson != null
         ? (productImagesJson as List)
               .map((img) => ProductImage.fromJson(img))
@@ -54,7 +55,7 @@ class Product {
         : null;
 
     productImages?.sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
-
+print('PRODUCT IMAGES JSON = $productImagesJson');
     return Product(
       id: json['id'].toString(),
       name: json['name'],
@@ -66,7 +67,7 @@ class Product {
       categoryId: (json['category_id'] ?? json['categoryId']).toString(),
       brandId: (json['brand_id'] ?? json['brandId']).toString(),
       image: resolvedImage,
-      viewAngle: productImages,
+      productImages: productImages,
       stock: json['stock'],
       rating: json['rating'] != null
           ? (json['rating'] as num).toDouble()
@@ -85,7 +86,7 @@ class Product {
       'category_id': categoryId,
       'brand_id': brandId,
       'image': image,
-      'view_angle': viewAngle?.map((e) => e.toJson()).toList(),
+      'product_images': productImages?.map((e) => e.toJson()).toList(),
       'stock': stock,
       'rating': rating,
       'reviews_count': reviews,

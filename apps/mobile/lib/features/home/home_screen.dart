@@ -12,7 +12,7 @@ import 'package:mobile/providers/product_provider.dart';
 import 'package:mobile/providers/favorites_provider.dart';
 import 'package:mobile/theme/app_colors.dart';
 import 'package:mobile/theme/app_text_style.dart';
-import 'package:mobile/widgets/heading.dart';
+
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -43,7 +43,7 @@ class HomeScreen extends StatelessWidget {
       appBar: Heading(
         onMenuPressed: () {},
         actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+
           Badge(
             label: Text('${favoritesProvider.favorites.length}'),
             isLabelVisible: favoritesProvider.favorites.isNotEmpty,
@@ -198,5 +198,39 @@ class HomeScreen extends StatelessWidget {
     }
 
     return Icons.devices_other;
+  }
+}
+
+class Heading extends StatelessWidget implements PreferredSizeWidget {
+  final VoidCallback onMenuPressed;
+  final List<Widget> actions;
+
+  const Heading({
+    super.key,
+    required this.onMenuPressed,
+    required this.actions,
+  });
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      leading: IconButton(
+        icon: const Icon(Icons.menu),
+        onPressed: onMenuPressed,
+      ),
+      title: const Text('UrComputer'),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: (){
+            context.push('/search');
+          }
+        ),
+        ...actions,
+      ],
+    );
   }
 }

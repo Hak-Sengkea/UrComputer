@@ -3,6 +3,11 @@ import '../../models/product.dart';
 
 class ProductRepository {
   final SupabaseClient _supabase = Supabase.instance.client;
+    static const String _productSelectQuery = '''
+    *,
+    product_images(*)
+  ''';
+
 
   Future<List<Product>> getAllProducts() async {
     final response = await _supabase
@@ -46,19 +51,18 @@ class ProductRepository {
 
   Future<Product?> getProductById(String id) async {
     try {
+      // 🌟 Cleaned up: You don't need a separate network request _getProductImages(id)
+      // We can use the nested select here just like the other functions!
       final productResponse = await _supabase
           .from('products')
-          .select()
+          .select(_productSelectQuery)
           .eq('id', id)
           .maybeSingle();
+        print('RESPONSE = $productResponse');
 
       if (productResponse == null) return null;
 
-      final productJson = Map<String, dynamic>.from(productResponse);
-      final productImages = await _getProductImages(id);
-      productJson['product_images'] = productImages;
-
-      return Product.fromJson(productJson);
+      return Product.fromJson(productResponse);
     } catch (e) {
       return null;
     }

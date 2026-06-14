@@ -14,12 +14,13 @@ class ProductImage {
   });
 
   factory ProductImage.fromJson(Map<String, dynamic> json) {
-    final rawImageUrl = (json['image_url'] ?? '').toString();
+   final rawImageUrl =
+    (json['image_url'] ?? '').toString().trim();
     final resolvedImageUrl =
         rawImageUrl.isEmpty || rawImageUrl.startsWith('http')
         ? rawImageUrl
         : Supabase.instance.client.storage
-              .from('products')
+              .from('product_images')
               .getPublicUrl(rawImageUrl);
 
     return ProductImage(

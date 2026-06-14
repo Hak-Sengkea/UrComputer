@@ -114,14 +114,18 @@ GoRouter createRouter(AuthProvider authProvider) {
               return ProductDetail(productId: productId);
             },
           ),
+          // GoRoute(
+          //   path:'/search',
+          //   name: 'search',
+          //   builder: (context, state) {
+          //     final query = state.uri.queryParameters['q'] ?? '';
+          //     return SearchScreen(query: query);
+          //   },
+          // ),
           GoRoute(
-            path:'/search',
-            name: 'search',
-            builder: (context, state) {
-              final query = state.uri.queryParameters['q'] ?? '';
-              return SearchScreen(query: query);
-            },
-          ),
+          path: '/search',
+          builder: (context, state) => const SearchScreen(),
+        ),
           GoRoute(
             path: '/category/:id',
             name: 'category_products',
