@@ -82,6 +82,8 @@ class AuthService {
       throw Exception('Registration failed: ${e.toString().replaceFirst('Exception: ', '')}');
     }
   }
+
+
   
   // Get user data from profiles table or session fallback
   Future<User?> getUserData() async {

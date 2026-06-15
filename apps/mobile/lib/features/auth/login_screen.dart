@@ -8,6 +8,9 @@ import 'widgets/social_button.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_text_style.dart';
 import '../../providers/auth_provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+// ignore: unnecessary_import
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,13 +24,31 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
+  // this for conection with google
+  Future<void> _loginWithGoogle() async {
+  try {
+    await Supabase.instance.client.auth.signInWithOAuth(
+      OAuthProvider.google,
+      redirectTo: 'com.example.mobile://login-callback',
+      authScreenLaunchMode: LaunchMode.externalApplication,
+    );
+  } catch (e) {
+    // ignore: avoid_print
+    print('ERROR: $e');
+  }
+}
+
   @override
   void initState() {
     super.initState();
-    if (kDebugMode) {
-      // _emailController.text = 'demo@example.com';
-      // _passwordController.text = 'password123';
-    }
+
+    Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+      final event = data.event;
+
+      if (event == AuthChangeEvent.signedIn && mounted) {
+        context.go('/home');
+      }
+    });
   }
 
   @override
@@ -65,7 +86,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final success = await authProvider.login(email, password);
     
     if (success && mounted) {
-      // ✅ FIXED: Navigate to '/home' not '/'
       context.go('/home');
     } else if (mounted) {
       _showSnackBar(authProvider.errorMessage ?? 'Login failed. Please try again.');
@@ -143,6 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Text(
           'Please login to continue',
           style: AppTextStyle.bodyMedium.copyWith(
+            // ignore: deprecated_member_use
             color: AppTheme.textSecondary.withOpacity(0.7),
           ),
         ),
@@ -196,8 +217,10 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
+              // ignore: deprecated_member_use
               color: Colors.red.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
+              // ignore: deprecated_member_use
               border: Border.all(color: Colors.red.withOpacity(0.3)),
             ),
             child: Row(
@@ -243,6 +266,7 @@ class _LoginScreenState extends State<LoginScreen> {
             color: AppTheme.cardBg,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
+              // ignore: deprecated_member_use
               color: Colors.white.withOpacity(0.1),
               width: 1,
             ),
@@ -281,6 +305,7 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         Row(
           children: [
+            // ignore: deprecated_member_use
             Expanded(child: Divider(color: Colors.white.withOpacity(0.1))),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -292,6 +317,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
+            // ignore: deprecated_member_use
             Expanded(child: Divider(color: Colors.white.withOpacity(0.1))),
           ],
         ),
@@ -305,7 +331,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(width: 12),
             SocialButton(
               label: 'Google',
-              onPressed: () => _showSnackBar('Google login coming soon'),
+              onPressed: _loginWithGoogle,
             ),
           ],
         ),
@@ -380,6 +406,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Text(
         text,
         style: AppTextStyle.labelSmall.copyWith(
+          // ignore: deprecated_member_use
           color: AppTheme.textSecondary.withOpacity(0.7),
         ),
       ),
