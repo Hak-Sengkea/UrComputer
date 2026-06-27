@@ -10,6 +10,7 @@ import 'package:mobile/providers/favorites_provider.dart';
 import 'package:mobile/data/repository/cart_repository.dart';
 import 'package:provider/provider.dart';
 import 'providers/pc_builder_provider.dart';
+import 'providers/theme_provider.dart'; 
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
 
@@ -37,16 +38,21 @@ class UrComputerApp extends StatelessWidget {
           create: (_) => FavoritesProvider()..loadFavorites(),
         ),
         ChangeNotifierProvider(create: (_) => PCBuilderProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()), 
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
-          return MaterialApp.router(
-            title: 'UrComputer',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: ThemeMode.dark,
-            routerConfig: createRouter(authProvider),
+          return Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return MaterialApp.router(
+                title: 'UrComputer',
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                themeMode: themeProvider.themeMode,  
+                routerConfig: createRouter(authProvider),
+              );
+            },
           );
         },
       ),

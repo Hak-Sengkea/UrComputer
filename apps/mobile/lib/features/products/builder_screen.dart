@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../providers/pc_builder_provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/theme_provider.dart';
 import 'component_selection_screen.dart';
 import 'my_builds_screen.dart';
 
@@ -36,38 +37,43 @@ class _BuilderScreenState extends State<BuilderScreen> {
   }
   
   void _showSaveDialog() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Save Your Build'),
-        backgroundColor: Colors.grey[900],
+        title: Text(
+          'Save Your Build',
+          style: TextStyle(color: isDark ? Colors.white : Colors.black),
+        ),
+        backgroundColor: isDark ? Colors.grey[900] : Colors.grey[100],
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: _buildNameController,
-              style: const TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
+              style: TextStyle(color: isDark ? Colors.white : Colors.black),
+              decoration: InputDecoration(
                 labelText: 'Build Name',
                 hintText: 'e.g., Gaming PC 2024',
-                labelStyle: TextStyle(color: Colors.grey),
-                hintStyle: TextStyle(color: Colors.grey),
+                labelStyle: TextStyle(color: isDark ? Colors.grey : Colors.grey[600]),
+                hintStyle: TextStyle(color: isDark ? Colors.grey : Colors.grey[600]),
                 enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
+                  borderSide: BorderSide(color: isDark ? Colors.grey : Colors.grey[400]!),
                 ),
               ),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _descriptionController,
-              style: const TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
+              style: TextStyle(color: isDark ? Colors.white : Colors.black),
+              decoration: InputDecoration(
                 labelText: 'Description (optional)',
                 hintText: 'Describe your build...',
-                labelStyle: TextStyle(color: Colors.grey),
-                hintStyle: TextStyle(color: Colors.grey),
+                labelStyle: TextStyle(color: isDark ? Colors.grey : Colors.grey[600]),
+                hintStyle: TextStyle(color: isDark ? Colors.grey : Colors.grey[600]),
                 enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
+                  borderSide: BorderSide(color: isDark ? Colors.grey : Colors.grey[400]!),
                 ),
               ),
               maxLines: 3,
@@ -77,7 +83,10 @@ class _BuilderScreenState extends State<BuilderScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: isDark ? Colors.white : Colors.black),
+            ),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -123,22 +132,39 @@ class _BuilderScreenState extends State<BuilderScreen> {
   
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.isDarkMode;
+    
     return Consumer<PCBuilderProvider>(
       builder: (context, builderProvider, child) {
         return Scaffold(
+          backgroundColor: isDark ? Colors.black : Colors.grey[100],
           appBar: AppBar(
-            title: const Text('PC Builder'),
-            backgroundColor: Colors.black,
+            title: Text(
+              'PC Builder',
+              style: TextStyle(
+                color: isDark ? Colors.white : Colors.black,
+              ),
+            ),
+            backgroundColor: isDark ? Colors.black : Colors.grey[100],
+            elevation: 0,
+            foregroundColor: isDark ? Colors.white : Colors.black,
             actions: [
               IconButton(
-                icon: const Icon(Icons.save),
+                icon: Icon(
+                  Icons.save,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
                 onPressed: builderProvider.isBuildComplete 
                     ? _showSaveDialog 
                     : null,
                 tooltip: 'Save Build',
               ),
               IconButton(
-                icon: const Icon(Icons.list_alt),
+                icon: Icon(
+                  Icons.list_alt,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
                 onPressed: () {
                   context.push('/my-builds');
                 },
@@ -151,15 +177,18 @@ class _BuilderScreenState extends State<BuilderScreen> {
               // Build summary
               Container(
                 padding: const EdgeInsets.all(16),
-                color: Colors.grey[900],
+                color: isDark ? Colors.grey[900] : Colors.grey[200],
                 child: Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        Text(
                           'Total Price:',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: isDark ? Colors.white : Colors.black,
+                          ),
                         ),
                         Text(
                           '\$${builderProvider.totalPrice.toStringAsFixed(2)}',
@@ -224,6 +253,8 @@ class _BuilderScreenState extends State<BuilderScreen> {
     IconData icon,
   ) {
     final component = provider.selectedComponents[type];
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.isDarkMode;
     
     return GestureDetector(
       onTap: () async {
@@ -247,10 +278,12 @@ class _BuilderScreenState extends State<BuilderScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.grey[900],
+          color: isDark ? Colors.grey[900] : Colors.grey[200],
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: component != null ? Colors.green : Colors.grey[800]!,
+            color: component != null 
+                ? Colors.green 
+                : (isDark ? Colors.grey[800]! : Colors.grey[300]!),
             width: component != null ? 2 : 1,
           ),
         ),
@@ -264,9 +297,10 @@ class _BuilderScreenState extends State<BuilderScreen> {
                 children: [
                   Text(
                     provider.getTypeLabel(type),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -276,9 +310,9 @@ class _BuilderScreenState extends State<BuilderScreen> {
                       children: [
                         Text(
                           component.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
-                            color: Colors.white,
+                            color: isDark ? Colors.white : Colors.black87,
                           ),
                         ),
                         Text(
@@ -292,10 +326,10 @@ class _BuilderScreenState extends State<BuilderScreen> {
                     )
                   else
                     Text(
-                      'Select ${provider.getTypeLabel(type)}',  // ✅ Changed: removed "Optional" logic
+                      'Select ${provider.getTypeLabel(type)}',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey[600],
+                        color: isDark ? Colors.grey[600] : Colors.grey[500],
                       ),
                     ),
                 ],
@@ -307,7 +341,10 @@ class _BuilderScreenState extends State<BuilderScreen> {
                 onPressed: () => provider.removeComponent(type),
               )
             else
-              const Icon(Icons.chevron_right),
+              Icon(
+                Icons.chevron_right,
+                color: isDark ? Colors.grey : Colors.grey[600],
+              ),
           ],
         ),
       ),

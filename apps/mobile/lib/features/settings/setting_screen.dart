@@ -3,10 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/features/settings/widgets/settings_title.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/theme_provider.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/profile_card.dart';
 import 'widgets/settings_section.dart';
-import 'widgets/settings_title.dart';
+import 'widgets/settings_tile.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -17,7 +18,6 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   bool _notificationsEnabled = true;
-  bool _darkModeEnabled = true;
   String _selectedLanguage = 'English';
   String _selectedCurrency = 'USD';
 
@@ -41,7 +41,6 @@ class _SettingScreenState extends State<SettingScreen> {
     });
   }
 
-
   void _safeGo(String route) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
@@ -53,10 +52,14 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final user = authProvider.currentUser;
+    
+    
+    final isDark = themeProvider.isDarkMode;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: isDark ? Colors.black : Colors.grey[100],
       appBar: AppBar(
         title: const Text(
           'Settings',
@@ -65,11 +68,11 @@ class _SettingScreenState extends State<SettingScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: isDark ? Colors.black : Colors.grey[100],
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: _safePop,  
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : Colors.black),
+          onPressed: _safePop,
         ),
       ),
       body: SingleChildScrollView(
@@ -88,7 +91,7 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
             const SizedBox(height: 24),
 
-            
+            // Preferences Section
             SettingsSection(
               title: 'PREFERENCES',
               icon: Icons.settings,
@@ -106,9 +109,9 @@ class _SettingScreenState extends State<SettingScreen> {
                   title: 'Dark Mode',
                   subtitle: 'Use dark theme throughout the app',
                   isSwitch: true,
-                  switchValue: _darkModeEnabled,
+                  switchValue: themeProvider.isDarkMode,  
                   onSwitchChanged: (value) {
-                    setState(() => _darkModeEnabled = value);
+                    themeProvider.toggleTheme();  
                   },
                 ),
                 SettingsTile(
@@ -127,7 +130,7 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
             const SizedBox(height: 24),
 
-            
+            // Account Section
             SettingsSection(
               title: 'ACCOUNT',
               icon: Icons.account_circle,
@@ -136,7 +139,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   title: 'My Builds',
                   subtitle: 'View all your saved PC builds',
                   leadingIcon: Icons.computer,
-                  onTap: () => _safePush('/my-builds'), 
+                  onTap: () => _safePush('/my-builds'),
                 ),
                 SettingsTile(
                   title: 'Change Password',
@@ -148,7 +151,7 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
             const SizedBox(height: 24),
 
-            
+            // About Section
             SettingsSection(
               title: 'ABOUT',
               icon: Icons.info,
@@ -173,7 +176,7 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
             const SizedBox(height: 24),
 
-            
+            // Danger Zone Section
             SettingsSection(
               title: 'DANGER ZONE',
               icon: Icons.warning,
@@ -232,39 +235,39 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   void _showCurrencyDialog() {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Select Currency'),
-      backgroundColor: Colors.grey[900],
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            title: const Text('USD (\$)'),
-            trailing: _selectedCurrency == 'USD'
-                ? Icon(Icons.check, color: AppTheme.neonCyan)
-                : null,
-            onTap: () {
-              setState(() => _selectedCurrency = 'USD');
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: const Text('RIEL (៛)'),
-            trailing: _selectedCurrency == 'RIEL'
-                ? Icon(Icons.check, color: AppTheme.neonCyan)
-                : null,
-            onTap: () {
-              setState(() => _selectedCurrency = 'RIEL');
-              Navigator.pop(context);
-            },
-          ),
-        ],
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Currency'),
+        backgroundColor: Colors.grey[900],
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('USD (\$)'),
+              trailing: _selectedCurrency == 'USD'
+                  ? Icon(Icons.check, color: AppTheme.neonCyan)
+                  : null,
+              onTap: () {
+                setState(() => _selectedCurrency = 'USD');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('RIEL (៛)'),
+              trailing: _selectedCurrency == 'RIEL'
+                  ? Icon(Icons.check, color: AppTheme.neonCyan)
+                  : null,
+              onTap: () {
+                setState(() => _selectedCurrency = 'RIEL');
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   void _showChangePasswordDialog() {
     ScaffoldMessenger.of(context).showSnackBar(
