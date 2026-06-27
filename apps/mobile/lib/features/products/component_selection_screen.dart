@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../models/product.dart';
 import '../../providers/pc_builder_provider.dart';
-import '../../providers/theme_provider.dart';  // ✅ ADD THIS
+import '../../providers/theme_provider.dart';
 import '../../theme/app_theme.dart';
 
 class ComponentSelectionScreen extends StatefulWidget {
@@ -51,24 +51,23 @@ class _ComponentSelectionScreenState extends State<ComponentSelectionScreen> {
   
   @override
   Widget build(BuildContext context) {
-    // ✅ ADD THEME PROVIDER
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDark = themeProvider.isDarkMode;
     
     return Scaffold(
-      backgroundColor: isDark ? Colors.black : Colors.grey[100],  // ✅ Dynamic
+      backgroundColor: isDark ? Colors.black : Colors.grey[100],
       appBar: AppBar(
         title: Text(
           'Select ${context.read<PCBuilderProvider>().getTypeLabel(widget.componentType)}',
-          style: TextStyle(color: isDark ? Colors.white : Colors.black),  // ✅ Dynamic
+          style: TextStyle(color: isDark ? Colors.white : Colors.black),  
         ),
-        backgroundColor: isDark ? Colors.black : Colors.grey[100],  // ✅ Dynamic
+        backgroundColor: isDark ? Colors.black : Colors.grey[100], 
         elevation: 0,
         foregroundColor: isDark ? Colors.white : Colors.black,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: isDark ? Colors.white : Colors.black,  // ✅ Dynamic
+            color: isDark ? Colors.white : Colors.black, 
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -79,18 +78,18 @@ class _ComponentSelectionScreenState extends State<ComponentSelectionScreen> {
             child: TextField(
               controller: _searchController,
               onChanged: (value) => setState(() => _searchQuery = value),
-              style: TextStyle(color: isDark ? Colors.white : Colors.black),  // ✅ Dynamic
+              style: TextStyle(color: isDark ? Colors.white : Colors.black),  
               decoration: InputDecoration(
                 hintText: 'Search by name...',
                 hintStyle: TextStyle(
-                  color: isDark ? Colors.grey : Colors.grey[600],  // ✅ Dynamic
+                  color: isDark ? Colors.grey : Colors.grey[600],  
                 ),
                 prefixIcon: Icon(
                   Icons.search,
-                  color: isDark ? Colors.grey : Colors.grey[600],  // ✅ Dynamic
+                  color: isDark ? Colors.grey : Colors.grey[600],  
                 ),
                 filled: true,
-                fillColor: isDark ? Colors.grey[900] : Colors.grey[200],  // ✅ Dynamic
+                fillColor: isDark ? Colors.grey[900] : Colors.grey[200],  
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -120,13 +119,13 @@ class _ComponentSelectionScreenState extends State<ComponentSelectionScreen> {
                   Icon(
                     Icons.search_off,
                     size: 64,
-                    color: isDark ? Colors.grey[600] : Colors.grey[400],  // ✅ Dynamic
+                    color: isDark ? Colors.grey[600] : Colors.grey[400],  
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'No components found',
                     style: TextStyle(
-                      color: isDark ? Colors.grey[600] : Colors.grey[500],  // ✅ Dynamic
+                      color: isDark ? Colors.grey[600] : Colors.grey[500],  
                     ),
                   ),
                 ],
@@ -148,14 +147,13 @@ class _ComponentSelectionScreenState extends State<ComponentSelectionScreen> {
   }
   
   Widget _buildComponentCard(Product component, bool isDark) {
-    // ✅ KEEP ORIGINAL IMAGE LOGIC - NOT CHANGED
     final hasValidImage = component.image != null && 
                           component.image!.isNotEmpty && 
                           !component.image!.contains('placehold.co');
     
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      color: isDark ? Colors.grey[900] : Colors.grey[200],  // ✅ Dynamic
+      color: isDark ? Colors.grey[900] : Colors.grey[200], 
       child: InkWell(
         onTap: () => Navigator.pop(context, component),
         borderRadius: BorderRadius.circular(12),
@@ -168,7 +166,7 @@ class _ComponentSelectionScreenState extends State<ComponentSelectionScreen> {
                 width: 70,
                 height: 70,
                 decoration: BoxDecoration(
-                  color: isDark ? Colors.grey[800] : Colors.grey[300],  // ✅ Dynamic
+                  color: isDark ? Colors.grey[800] : Colors.grey[300],  
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: AppTheme.neonCyan.withOpacity(0.3),
@@ -218,7 +216,7 @@ class _ComponentSelectionScreenState extends State<ComponentSelectionScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black,  // ✅ Dynamic
+                        color: isDark ? Colors.white : Colors.black,  
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -229,7 +227,7 @@ class _ComponentSelectionScreenState extends State<ComponentSelectionScreen> {
                         component.brandName!,
                         style: TextStyle(
                           fontSize: 12,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],  // ✅ Dynamic
+                          color: isDark ? Colors.grey[400] : Colors.grey[600], 
                         ),
                       ),
                     const SizedBox(height: 8),
@@ -241,7 +239,7 @@ class _ComponentSelectionScreenState extends State<ComponentSelectionScreen> {
                           (component.rating ?? 0.0).toStringAsFixed(1),
                           style: TextStyle(
                             fontSize: 12,
-                            color: isDark ? Colors.white : Colors.black,  // ✅ Dynamic
+                            color: isDark ? Colors.white : Colors.black,  
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -282,7 +280,7 @@ class _ComponentSelectionScreenState extends State<ComponentSelectionScreen> {
                   const SizedBox(height: 8),
                   Icon(
                     Icons.chevron_right,
-                    color: isDark ? Colors.grey : Colors.grey[600],  // ✅ Dynamic
+                    color: isDark ? Colors.grey : Colors.grey[600], 
                   ),
                 ],
               ),
