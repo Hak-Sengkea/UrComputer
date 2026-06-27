@@ -7,6 +7,7 @@ import '../../providers/theme_provider.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/profile_card.dart';
 import 'widgets/settings_section.dart';
+// ignore: unused_import
 import 'widgets/settings_tile.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -41,6 +42,7 @@ class _SettingScreenState extends State<SettingScreen> {
     });
   }
 
+  // ignore: unused_element
   void _safeGo(String route) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {

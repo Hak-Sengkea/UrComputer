@@ -6,7 +6,9 @@ import 'package:go_router/go_router.dart';
 import '../../providers/pc_builder_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
+// ignore: duplicate_import
 import 'component_selection_screen.dart';
+// ignore: unused_import
 import 'my_builds_screen.dart';
 
 class BuilderScreen extends StatefulWidget {
@@ -109,6 +111,7 @@ class _BuilderScreenState extends State<BuilderScreen> {
                 authProvider.currentUser!.id.toString(),
               );
               
+              // ignore: use_build_context_synchronously
               Navigator.pop(context);
               
               if (success && context.mounted) {
@@ -205,6 +208,7 @@ class _BuilderScreenState extends State<BuilderScreen> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
+                          // ignore: deprecated_member_use
                           color: Colors.green.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -267,6 +271,7 @@ class _BuilderScreenState extends State<BuilderScreen> {
         
         if (selected != null) {
           provider.selectComponent(type, selected);
+          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('${selected.name} added to build'),
