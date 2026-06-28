@@ -14,6 +14,7 @@ class CartProvider extends ChangeNotifier {
   CartProvider({required this.cartRepository});
 
   Cart? get cart => _cart;
+  String? get cartId => _cart?.id;
   List<CartItems> get cartItems => _cartItems;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -146,6 +147,12 @@ class CartProvider extends ChangeNotifier {
     _cartItems = [];
     _errorMessage = null;
     _isLoading = false;
+    notifyListeners();
+  }
+
+  // Helper method to clear items list locally after order placement
+  void clearLocalCart() {
+    _cartItems = [];
     notifyListeners();
   }
 }

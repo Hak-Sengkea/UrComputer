@@ -8,6 +8,8 @@ import 'package:mobile/providers/product_provider.dart';
 import 'package:mobile/providers/user_provider.dart';
 import 'package:mobile/providers/cart_provider.dart';
 import 'package:mobile/providers/favorites_provider.dart';
+import 'package:mobile/providers/order_provider.dart';
+import 'package:mobile/providers/support_provider.dart';
 import 'package:mobile/data/repository/cart_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/providers/pc_builder_provider.dart';
@@ -39,6 +41,8 @@ class UrComputerApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(create: (_) => PCBuilderProvider()),
         ChangeNotifierProvider(create: (_) => CompareProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(create: (_) => SupportProvider()),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {

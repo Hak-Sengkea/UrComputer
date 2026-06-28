@@ -9,6 +9,7 @@ import 'package:mobile/providers/cart_provider.dart';
 import 'package:mobile/providers/compare_provider.dart';
 import 'package:mobile/features/cart/widgets/quantity_button.dart';
 import 'package:mobile/theme/theme_context.dart';
+import 'package:mobile/widgets/shared/product_card.dart';
 import 'package:provider/provider.dart';
 
 class ProductDetail extends StatefulWidget {
@@ -219,6 +220,11 @@ class _ProductDetailState extends State<ProductDetail> {
                 QuickSpecs(product: product),
                 const SizedBox(height: AppSizes.space16),
                 PerformanceSection(product: product),
+                const SizedBox(height: AppSizes.space16),
+                RelatedProductsSection(
+                  categoryId: product.categoryId,
+                  currentProductId: product.id,
+                ),
               ],
             ),
           ),
@@ -990,4 +996,103 @@ class _PerformanceItem {
     required this.title,
     required this.value,
   });
+}
+
+class RelatedProductsSection extends StatefulWidget {
+  final String categoryId;
+  final String currentProductId;
+
+  const RelatedProductsSection({
+    super.key,
+    required this.categoryId,
+    required this.currentProductId,
+  });
+
+  @override
+  State<RelatedProductsSection> createState() => _RelatedProductsSectionState();
+}
+
+class _RelatedProductsSectionState extends State<RelatedProductsSection> {
+  late Future<List<Product>> _relatedProductsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRelatedProducts();
+  }
+
+  @override
+  void didUpdateWidget(RelatedProductsSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.categoryId != widget.categoryId ||
+        oldWidget.currentProductId != widget.currentProductId) {
+      _loadRelatedProducts();
+    }
+  }
+
+  void _loadRelatedProducts() {
+    _relatedProductsFuture = context.read<ProductProvider>().getRelatedProducts(
+      widget.categoryId,
+      widget.currentProductId,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return FutureBuilder<List<Product>>(
+      future: _relatedProductsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: AppSizes.space16),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (snapshot.hasError) {
+          return const SizedBox.shrink();
+        }
+
+        final related = snapshot.data ?? [];
+        if (related.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        // Shuffle list to get random suggestions and take up to 4 items as requested
+        final itemsToShow = List<Product>.from(related)..shuffle();
+        final finalItems = itemsToShow.take(4).toList();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Related Products',
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.colorScheme.onSurface,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: AppSizes.space12),
+            SizedBox(
+              height: 240,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.zero,
+                itemCount: finalItems.length,
+                itemBuilder: (context, index) {
+                  final product = finalItems[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(right: AppSizes.space16),
+                    child: ProductCard(product: product, width: 200),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

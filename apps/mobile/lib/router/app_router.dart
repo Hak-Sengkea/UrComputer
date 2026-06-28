@@ -13,6 +13,7 @@ import 'package:mobile/features/settings/setting_screen.dart';
 import 'package:mobile/features/support/support_screen.dart';
 import 'package:mobile/features/favorites/favorites_screen.dart';
 import 'package:mobile/features/testing/test_load_data.dart';
+import 'package:mobile/features/checkout/checkout_screen.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/widgets/main_shell.dart';
 
@@ -72,6 +73,11 @@ GoRouter createRouter(AuthProvider authProvider) {
         path: '/testing',
         name: 'testing',
         builder: (context, state) => const TestPage(),
+      ),
+      GoRoute(
+        path: '/checkout',
+        name: 'checkout',
+        builder: (context, state) => const CheckoutScreen(),
       ),
 
       ShellRoute(

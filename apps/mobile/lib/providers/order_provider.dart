@@ -31,7 +31,7 @@ class OrderProvider extends ChangeNotifier {
   }
 
   // Logic: Orchestrates placing a new order
-  Future<bool> checkout({
+  Future<Order?> checkout({
     required String userId,
     required String cartId,
     required List<CartItems> cartItems,
@@ -63,12 +63,12 @@ class OrderProvider extends ChangeNotifier {
       _orders.insert(0, newOrder);
       _isLoading = false;
       notifyListeners();
-      return true; // Return true to indicate UI can redirect to success screen
+      return newOrder; // Return the newly created order
     } catch (e) {
       _errorMessage = e.toString();
       _isLoading = false;
       notifyListeners();
-      return false; // Checkout failed
+      return null; // Checkout failed
     }
   }
 }

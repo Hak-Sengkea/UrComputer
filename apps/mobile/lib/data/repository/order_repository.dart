@@ -18,6 +18,16 @@ class OrderRepository {
     String? paymentMethod,
   }) async {
     try {
+      // Cancel any existing pending orders for this user to prevent duplicate pending orders
+      await _supabase
+          .from('orders')
+          .update({
+            'status': 'cancelled',
+            'payment_status': 'failed',
+          })
+          .eq('user_id', userId)
+          .eq('status', 'pending');
+
       // 1. Insert the master order row into 'orders' table
       final orderResponse = await _supabase.from('orders').insert({
         'user_id': userId,
@@ -49,8 +59,8 @@ class OrderRepository {
       // 3. Batch insert order items into 'order_items' table
       await _supabase.from('order_items').insert(orderItemsData);
 
-      // 4. Clear the cart from database
-      await _supabase.from('cart_items').delete().eq('cart_id', cartId);
+      // 4. Note: Cart items deletion is removed from here.
+      // We only clear the cart items after a successful payment transaction.
 
       // 5. Query and return the newly created order complete with order items
       final fullOrderResponse = await _supabase

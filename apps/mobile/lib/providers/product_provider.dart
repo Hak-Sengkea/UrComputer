@@ -98,6 +98,17 @@ class ProductProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<List<Product>> getRelatedProducts(String categoryId, String currentProductId) async {
+    try {
+      final allCategoryProducts = await _repository.getProductsByCategory(categoryId);
+      // Filter out the current product
+      final related = allCategoryProducts.where((p) => p.id != currentProductId).toList();
+      return related;
+    } catch (e) {
+      return [];
+    }
+  }
+
   void clearError() {
     _errorMessage = null;
     notifyListeners();

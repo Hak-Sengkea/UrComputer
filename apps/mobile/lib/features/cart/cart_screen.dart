@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/const/app_sizes.dart';
 import 'package:mobile/features/cart/widgets/item_cart.dart';
@@ -340,7 +341,7 @@ class _CartScreenState extends State<CartScreen> {
                   // PASSING PARAMETERS EFFICIENTLY:
                   // Instead of sending the list of cart items or prices in the router arguments,
                   // we just navigate. The CheckoutScreen listens to the same CartProvider globally!
-                  Navigator.pushNamed(context, '/checkout');
+                  context.push('/checkout');
                 },
                 icon: const Icon(Icons.shopping_bag_outlined),
                 label: const Text('Checkout'),
